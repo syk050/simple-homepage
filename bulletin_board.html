@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>게시판</title>
+    <!-- <link rel="stylesheet" href="/bulletin_board.css"> -->
+    <style>
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    /* Style table headers and table data */
+    th, td {
+        text-align: center;
+        padding: 16px;
+    }
+    th:nth-child(2), td:nth-child(2) {
+        text-align: left;
+        width: 60%;
+    }
+
+    /* Zebra-striped table rows */
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+    </style>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            // $('tbody').children().each(function(){
+            //     console.log($(this))
+            //     $(this).on('click', function(){
+            //         console.log($(this))
+            //     });
+            // });
+            $('tbody tr').on('click', function(){
+                console.log($(this));
+            });
+        });
+    </script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach(function(item, index){ %>
+            <tr>
+                <td><%= item.num %></td>
+                <td><%= item.title %></td>
+                <td><%= item.name %></td>
+                <td><%= item.writedate %></td>
+                <td><%= item.readcount %></td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+</body>
+</html>
