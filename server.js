@@ -31,10 +31,15 @@ app.get('/', function (request, response) {
     console.log('homepage In');
 
     fs.readFile('bulletin_board.html', 'utf8', function(err, data){
-      client.query('SELECT * FROM board', function(err, result){
-        response.send(ejs.render(data, {
-          data: result
-        }));
+      client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board', function(err, result){
+        if (err){
+          console.log(err);
+        }
+        else{
+          response.send(ejs.render(data, {
+            data: result
+          }));
+        }
       });
     });
 });
