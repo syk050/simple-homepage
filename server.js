@@ -56,10 +56,10 @@ app.get('/board/:id', function(request, response){
   console.log('board id In : ' + request.params.id);
 
   fs.readFile('bulletin.html', 'utf-8', function(error, data){
-    client.query('SELECT * FROM products WHERE id = ?', [
+    client.query('SELECT * FROM board WHERE num = ?', [
       request.params.id
     ], function(error, result){
-      if (result == empty){
+      if (result[0] == undefined){
         response.writeHead(404);
         response.end('Not found');
       }else{

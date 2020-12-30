@@ -8,6 +8,14 @@
         body{
             margin: 0;
         }
+        a{
+            all: revert;
+            text-decoration: none;
+        }
+        a:link, a:visited{
+            color: #000;
+        }
+
         .content{
             margin: 0 auto;
             width: 90%;
@@ -52,6 +60,9 @@
             width: 100%;
             table-layout: fixed;
         }
+        .board_item:hover{
+            background-color: #f8f8f8;
+        }
         .board_item > div{
             display: table-cell;
             height: 34px;
@@ -65,6 +76,9 @@
             text-align: left;
             padding-left: 10px;
         }
+        .board_item .wr_title a:hover{
+            color: cadetblue;
+        }
         .board_item .wr_name{
             font-weight: bold;
             width: 100px;
@@ -77,21 +91,18 @@
         }
 
     </style>
+
     <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
     <script>
         $(document).ready(function(){
-            // $('tbody').children().each(function(){
-            //     console.log($(this))
-            //     $(this).on('click', function(){
-            //         console.log($(this))
-            //     });
-            // });
-            $('tbody tr').on('click', function(){
-                // console.log($(this));
-                var num = $(this).eq(0).text()
+            // $('.board_item .wr_title').on('click', function(){
+            //     console.log($(this).prev().text());
 
-                console.log(num);
-            });
+            //     var id = $(this).prev().text();
+
+            //     var url = '/board/' + id;
+            //     window.location.replace(url);
+            // });
         });
     </script>
 </head>
@@ -110,7 +121,11 @@
                 <% data.forEach(function (item, index){ %>
                     <div class="board_item">
                         <div class="wr_num"><%= item.num %></div>
-                        <div class="wr_title"><%= item.title %></div>
+                        <div class="wr_title">
+                            <a href="http://127.0.0.1:52273/board/<%= item.num %>">
+                                <%= item.title %>
+                            </a>
+                        </div>
                         <div class="wr_name"><%= item.name %></div>
                         <div class="wr_wd"><%= item.wd %></div>
                         <div class="wr_rc"><%= item.readcount %></div>
