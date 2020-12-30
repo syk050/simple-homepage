@@ -26,67 +26,47 @@ server.listen(52273, function () {
   // client.query('truncate customer')
 });
 
-// 일단 소비자 화면
-app.get('/', function (request, response) {
-    console.log('homepage In');
 
-    fs.readFile('bulletin_board.html', 'utf8', function(err, data){
-      client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board', function(err, result){
-        if (err){
-          console.log(err);
-        }
-        else{
-          response.send(ejs.render(data, {
-            data: result
-          }));
-        }
-      });
-    });
+app.get('/', function (request, response) {
+    console.log('root In');
+
+    response.redirect('/board');
 });
 
-// 소비자 화면
-app.get('/customer', function (request, response) {
-  console.log('In customer');
+// 게시판 화면
+app.get('/board', function(request, response){
+  console.log('board In')
 
-  fs.readFile('21624118.html', 'utf8', function (error, data) {
-    var full_item;
-    var series;
-
-    // 전체상품
-    client.query('SELECT * FROM products', function (error, results) {
-      full_item=results;
-    });
-
-    // 카테고리
-    client.query('SELECT DISTINCT series FROM products', function(error, result){
-      series=result;
-    });
-
-    // 뒤에서 6개 상품
-    client.query('SELECT * FROM(SELECT * FROM products ORDER BY id DESC LIMIT 6) as lm6 ORDER BY id ASC',
-      function(error, result){
-        // 결과 반환
-        // render( 'ejs파일 경로', 'json 형태 데이터');
+  fs.readFile('bulletin_board.html', 'utf8', function(err, data){
+    client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board', function(err, result){
+      if (err){
+        console.log(err);
+      }
+      else{
         response.send(ejs.render(data, {
-          newdata: result,
-          data: full_item,
-          category: series
+          data: result
         }));
+      }
     });
   });
-});
+})
 
-// 아이템 상세 설명 창
-app.get('/item/:id', function(request, response){
-  console.log('In GET item : ' + request.params.id);
+// 게시글 선택
+app.get('/board/:id', function(request, response){
+  console.log('board id In : ' + request.params.id);
 
-  fs.readFile('item.html', 'utf-8', function(error, data){
+  fs.readFile('bulletin.html', 'utf-8', function(error, data){
     client.query('SELECT * FROM products WHERE id = ?', [
       request.params.id
     ], function(error, result){
-      response.send(ejs.render(data,{
-        data: result[0]
-      }));
+      if (result == empty){
+        response.writeHead(404);
+        response.end('Not found');
+      }else{
+        response.send(ejs.render(data,{
+          data: result[0]
+        }));
+      }
     });
   });
 });
