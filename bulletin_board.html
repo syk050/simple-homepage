@@ -131,6 +131,10 @@
 </head>
 <body>
     <div class="content">
+        <div class="top_menu">
+
+        </div>
+
         <div class="list_board">
             <div class="board_head">
                 <span class="wr_num">번호</span>
@@ -151,7 +155,11 @@
                         </div>
                         <div class="wr_name"><%= item.name %></div>
                         <div class="wr_wd"><%= item.wd %></div>
-                        <div class="wr_rc"><%= item.readcount %></div>
+                        <% if (item.readcount > 9) { %>
+                            <div class="wr_rc">9+</div>
+                        <% }else{ %>
+                            <div class="wr_rc"><%= item.readcount %></div>
+                        <% } %>
                     </div>
                 <% }); %>
             </div>
