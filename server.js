@@ -132,7 +132,12 @@ app.get('/edit/:id', function(request, response){
 app.post('/edit/:id', function(request, response){
   console.log('update id: ' + request.params.id)
 
-
+  var body = request.body
+  client.query('UPDATE board SET title=?, content=? WHERE num=?', [
+    body.title, body.content, request.params.id
+  ], function(err, result){
+    response.redirect('/board/' + request.params.id);
+  });
 });
 
 
