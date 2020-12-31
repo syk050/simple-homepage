@@ -11,6 +11,13 @@
         body{
             margin: 0;
         }
+        a{
+            all: revert;
+            text-decoration: none;
+        }
+        a:link, a:visited{
+            color: #000
+        }
 
         .content{
             margin: 0 auto;
@@ -26,13 +33,14 @@
         }
 
         .panel{
-            background-color: #ececec;
+            background-color: #f8f8f8;
             margin-bottom: 20px;
             border: 1px solid transparent;
             padding: 8px 12px;
-        }
-        .panel span{
             font-size: 14px;
+        }
+        .panel .edit_post_btn{
+            float: right;
         }
 
         .description{
@@ -54,7 +62,7 @@
     
             <div class="panel">
                 <span><%= data.name %></span>
-
+                <a href="/edit/<%= data.num %>" class="edit_post_btn" >수정</a>
             </div>
             
             <div class="description">
