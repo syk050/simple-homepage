@@ -38,7 +38,7 @@ app.get('/board', function(request, response){
   console.log('board In')
 
   fs.readFile('bulletin_board.html', 'utf8', function(err, data){
-    client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board', function(err, result){
+    client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board ORDER BY num DESC', function(err, result){
       if (err){
         console.log(err);
       }
@@ -55,7 +55,22 @@ app.get('/board', function(request, response){
 app.get('/board/:id', function(request, response){
   console.log('board id In : ' + request.params.id);
 
-  fs.readFile('bulletin.html', 'utf-8', function(error, data){
+  var rc = 0;
+  client.query('SELECT readcount FROM board WHERE num = ?', [
+    request.params.id
+  ], function(err, data){
+    if(err){
+      console.log(err);
+    }else{
+      rc = data.readcount;
+
+      client.query('UPDATE products SET readcount=? WHERE id=?', [
+        rc, request.params.id
+      ]);
+    }
+  });
+
+  fs.readFile('post.html', 'utf-8', function(error, data){
     client.query('SELECT * FROM board WHERE num = ?', [
       request.params.id
     ], function(error, result){
@@ -68,6 +83,30 @@ app.get('/board/:id', function(request, response){
         }));
       }
     });
+  });
+});
+
+// 게시글 작성
+app.get('/creating_post', function(request, response){
+  console.log('creating_post');
+
+  fs.readFile('posting.html', 'utf8', function(err, data){
+    response.send(data);
+  })
+});
+
+// 게시글 작성 완료
+app.post('/creating_post', function(request, response){
+  console.log('creat_post');
+
+  var body = request.body;
+  client.query('INSERT INTO board (name, title, content) VALUES ("undefiend", ?, ?)',[
+    body.title, body.content
+  ], function(err){
+    if(err){
+      console.log(err)
+    }
+    response.redirect('/board');
   });
 });
 

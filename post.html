@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title><%= data.title %></title>
+    <!-- <link rel="stylesheet" href="/bulletin_board.css"> -->
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            margin: 0;
+        }
+
+        .content{
+            margin: 0 auto;
+            padding-bottom: 20px;
+            width: 90%;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgb(0, 0, 0, 0.5)
+        }
+
+        .view_post{
+            padding: 0 10px;
+            vertical-align: middle;
+        }
+
+        .panel{
+            background-color: #ececec;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            padding: 8px 12px;
+        }
+        .panel span{
+            font-size: 14px;
+        }
+
+        .description{
+            padding-left:15px;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
+    <script>
+        $(document).ready(function(){
+
+
+        });
+    </script>
+</head>
+<body>
+    <div class="content">
+        <div class="view_post">
+            <h1><%= data.title %></h1>
+    
+            <div class="panel">
+                <span><%= data.name %></span>
+
+            </div>
+            
+            <div class="description">
+                <%= data.content %>
+            </div>
+    
+            <div class="comment">
+    
+            </div>
+        </div>
+    </div>
+</body>
+</html>
