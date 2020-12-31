@@ -62,9 +62,10 @@ app.get('/board/:id', function(request, response){
     if(err){
       console.log(err);
     }else{
-      rc = data.readcount;
+      // console.log(data[0].readcount)
+      rc = data[0].readcount + 1;
 
-      client.query('UPDATE products SET readcount=? WHERE id=?', [
+      client.query('UPDATE board SET readcount=? WHERE num=?', [
         rc, request.params.id
       ]);
     }
