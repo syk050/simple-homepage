@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title><%= data.title %></title>
-    <!-- <link rel="stylesheet" href="/bulletin_board.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         *{
             box-sizing: border-box;
@@ -17,6 +17,10 @@
         }
         a:link, a:visited{
             color: #000
+        }
+
+        .right_place{
+            float: right;
         }
 
         .content{
@@ -39,12 +43,20 @@
             padding: 8px 12px;
             font-size: 14px;
         }
-        .panel .edit_post_btn{
-            float: right;
+
+        .blank{
+            width: 12px;
+            display: inline-block;
         }
 
         .description{
             padding-left:15px;
+        }
+
+        .board_btn{
+            color: #fff !important;
+            background-color: #333;
+            padding: 2px 8px;
         }
     </style>
     <script src="http://code.jquery.com/jquery-3.1.1.js"></script>
@@ -62,11 +74,24 @@
     
             <div class="panel">
                 <span><%= data.name %></span>
-                <a href="/edit/<%= data.num %>" class="edit_post_btn" >수정</a>
+
+                <div class="right_place">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <a href="/edit/<%= data.num %>" class="edit_btn" >수정</a>
+                    <span class="blank"></span>
+                    <a href="/delete/<%= data.num %>" class="delete_btn">삭제</a>
+                </div>
             </div>
             
             <div class="description">
                 <%= data.content %>
+            </div>
+
+            <div class="right_place">
+                <a href="/board" class="board_btn">
+                    <i class="fa fa-bars"></i>
+                    <span>목록</span>
+                </a>
             </div>
     
             <div class="comment">

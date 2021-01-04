@@ -18,6 +18,8 @@ var server = require('http').createServer(app);
 io.attach(server);
 
 // app.use(express.static(__dirname + '/public'));
+app.set('view engine', 'ejs');
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
 
 // 서버 실행
@@ -37,18 +39,15 @@ app.get('/', function (request, response) {
 app.get('/board', function(request, response){
   console.log('board In')
 
-  fs.readFile('bulletin_board.html', 'utf8', function(err, data){
-    client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board ORDER BY num DESC', function(err, result){
-      if (err){
-        console.log(err);
-      }
-      else{
-        response.send(ejs.render(data, {
-          data: result
-        }));
-      }
-    });
+  client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board ORDER BY num DESC', function(err, result){
+    if (err){
+      console.log(err);
+    }
+    else{
+      response.render('pages/board', {data: result});
+    }
   });
+  
 })
 
 // 게시글 선택
@@ -64,38 +63,35 @@ app.get('/board/:id', function(request, response){
       console.log(err);
     }else{
       // console.log(data[0].readcount)
-      rc = data[0].readcount + 1;
+      if (data[0].readcount < 10){
+        rc = data[0].readcount + 1;
 
-      client.query('UPDATE board SET readcount=? WHERE num=?', [
-        rc, request.params.id
-      ]);
+        client.query('UPDATE board SET readcount=? WHERE num=?', [
+          rc, request.params.id
+        ]);
+      }
     }
   });
 
   // 게시글 표시
-  fs.readFile('post.html', 'utf-8', function(error, data){
-    client.query('SELECT * FROM board WHERE num = ?', [
-      request.params.id
-    ], function(error, result){
-      if (result[0] == undefined){
-        response.writeHead(404);
-        response.end('Not found');
-      }else{
-        response.send(ejs.render(data,{
-          data: result[0]
-        }));
-      }
-    });
+  client.query('SELECT * FROM board WHERE num = ?', [
+    request.params.id
+  ], function(error, result){
+    if (result[0] == undefined){
+      response.writeHead(404);
+      response.end('Not found');
+    }else{
+      response.render('pages/post', {data: result[0]});
+    }
   });
+
 });
 
 // 게시글 작성
 app.get('/creating_post', function(request, response){
   console.log('creating_post');
 
-  fs.readFile('posting.html', 'utf8', function(err, data){
-    response.send(data);
-  })
+  response.render('pages/posting');
 });
 
 // 게시글 작성 완료
@@ -117,15 +113,12 @@ app.post('/creating_post', function(request, response){
 app.get('/edit/:id', function(request, response){
   console.log('edit id In : ' + request.params.id);
 
-  fs.readFile('edit_post.html', 'utf8', function(err, data){
-    client.query('SELECT * FROM board WHERE num = ?', [
-      request.params.id
-    ], function(err, result){
-      response.send(ejs.render(data, {
-        data: result[0]
-      }));
-    });
+  client.query('SELECT * FROM board WHERE num = ?', [
+    request.params.id
+  ], function(err, result){
+    response.render('pages/edit_post', {data: result[0]});
   });
+
 });
 
 // 게시글 수정 완료
@@ -140,6 +133,15 @@ app.post('/edit/:id', function(request, response){
   });
 });
 
+// 게시글 삭제
+app.get('/delete/:id', function(request, response){
+  client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
+    response.redirect('/board');
+ });
+});
+
+
+
 
 // 아이템 삭제
 app.get('/delete/:id', function (request, response) {
@@ -149,7 +151,6 @@ app.get('/delete/:id', function (request, response) {
     response.redirect('/admin');
  });
 });
-
 
 // db에 초기 아이템 생성
 app.get('/__!create_item__', function(request, response) {

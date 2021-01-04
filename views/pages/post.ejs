@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title><%= data.title %></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            margin: 0;
+        }
+        a{
+            all: revert;
+            text-decoration: none;
+        }
+        a:link, a:visited{
+            color: #000
+        }
+
+        .right_place{
+            float: right;
+        }
+
+        .content{
+            margin: 0 auto;
+            padding-bottom: 20px;
+            width: 90%;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgb(0, 0, 0, 0.5)
+        }
+
+        .view_post{
+            padding: 0 10px;
+            vertical-align: middle;
+        }
+
+        .panel{
+            background-color: #f8f8f8;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .blank{
+            width: 12px;
+            display: inline-block;
+        }
+
+        .description{
+            padding-left:15px;
+        }
+
+        .board_btn{
+            color: #fff !important;
+            background-color: #333;
+            padding: 2px 8px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+    <script>
+        $(document).ready(function(){
+
+
+        });
+    </script>
+</head>
+<body>
+    <div class="content">
+        <%- include('../partials/nav'); %>
+
+        <div class="view_post">
+            <h1><%= data.title %></h1>
+    
+            <div class="panel">
+                <span><%= data.name %></span>
+
+                <div class="right_place">
+                    <i class="fa fa-pencil-square-o"></i>
+                    <a href="/edit/<%= data.num %>" class="edit_btn" >수정</a>
+                    <span class="blank"></span>
+                    <a href="/delete/<%= data.num %>" class="delete_btn">삭제</a>
+                </div>
+            </div>
+            
+            <div class="description">
+                <%= data.content %>
+            </div>
+
+            <div class="right_place">
+                <a href="/board" class="board_btn">
+                    <i class="fa fa-bars"></i>
+                    <span>목록</span>
+                </a>
+            </div>
+    
+            <div class="comment">
+    
+            </div>
+        </div>
+    </div>
+</body>
+</html>
