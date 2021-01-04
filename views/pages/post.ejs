@@ -7,52 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <style>
-        *{
-            box-sizing: border-box;
-        }
         body{
             margin: 0;
-        }
-        a{
-            all: revert;
-            text-decoration: none;
-        }
-        a:link, a:visited{
-            color: #000
-        }
-
-        .right_place{
-            float: right;
-        }
-
-        .content{
-            margin: 0 auto;
-            padding-bottom: 20px;
-            width: 90%;
-            overflow: hidden;
-            box-shadow: 0 0 8px rgb(0, 0, 0, 0.5)
-        }
-
-        .view_post{
-            padding: 0 10px;
-            vertical-align: middle;
-        }
-
-        .panel{
-            background-color: #f8f8f8;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            padding: 8px 12px;
-            font-size: 14px;
         }
 
         .blank{
             width: 12px;
             display: inline-block;
-        }
-
-        .description{
-            padding-left:15px;
         }
 
         .board_btn{
@@ -77,33 +38,33 @@
     <div class="content">
         <%- include('../partials/nav'); %>
 
-        <div class="view_post">
-            <h1><%= data.title %></h1>
-    
-            <div class="panel">
-                <span><%= data.name %></span>
+        <div class="card border-light mb-3">
+            <div class="card-header bg-transparent">
+                <h1 class="text-info"><%= data.title %></h1>
 
-                <div class="right_place">
-                    <i class="fa fa-pencil-square-o"></i>
-                    <a href="/edit/<%= data.num %>" class="edit_btn" >수정</a>
-                    <span class="blank"></span>
-                    <a href="/delete/<%= data.num %>" class="delete_btn">삭제</a>
+                <div class="d-flex justify-content-between">
+                    <span class="text-secondary">&nbsp;&nbsp;<%= data.name %></span>
+
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="/edit/<%= data.num %>" class="btn btn-secondary" role="button">
+                            <i class="fa fa-pencil-square-o"></i>
+                            수정
+                        </a>
+                        <a href="/delete/<%= data.num %>" class="btn btn-secondary" role="button">삭제</a>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="description">
-                <%= data.content %>
+                
             </div>
 
-            <div class="right_place">
-                <a href="/board" class="board_btn">
+            <div class="card-body">
+              <%= data.content %>
+            </div>
+
+            <div class="card-footer bg-transparent d-flex justify-content-end">
+                <a href="/board" class="board_btn ">
                     <i class="fa fa-bars"></i>
                     <span>목록</span>
                 </a>
-            </div>
-    
-            <div class="comment">
-    
             </div>
         </div>
     </div>
