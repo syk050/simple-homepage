@@ -10,12 +10,8 @@
         body{
             margin: 0;
         }
-        a{
-            all: revert;
-            text-decoration: none;
-        }
-        a:link, a:visited{
-            color: #000
+        nav{
+            margin-bottom: 10px;
         }
 
         .content{
@@ -24,71 +20,22 @@
             box-shadow: 0 0 8px rgb(0, 0, 0, 0.5)
         }
 
-        .list_board{
-            padding: 0 10px;
-        }
-
-        .board_head{
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-            padding: 15px 0;
-            /* border-top: 2px solid; */
-            border-bottom: 1px solid #ccc;
-        }
-        .board_head > span{
-            display: table-cell;
-            height: 34px;
-            vertical-align: middle;
-            text-align: center;
-            font-weight: bold;
-        }
-        .board_head .wr_num{
-            width: 50px;
-        }
-        .board_head .wr_name{
-            width: 100px;
-        }
-        .board_head .wr_wd{
-            width: 70px;
-        }
-        .board_head .wr_rc{
-            width: 50px;
-        }
-
-        .board_item{
-            border-bottom: 1px solid #ddd;
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
-        .board_item:hover{
-            background-color: #f8f8f8;
-        }
-        .board_item > div{
-            display: table-cell;
-            height: 34px;
-            vertical-align: middle;
+        table{
             text-align: center;
         }
-        .board_item .wr_num{
+        .wr_num{
             width: 50px;
         }
-        .board_item .wr_title{
+        .wr_title{
             text-align: left;
-            padding-left: 10px;
         }
-        .board_item .wr_title a:hover{
-            color: cadetblue;
-        }
-        .board_item .wr_name{
-            font-weight: bold;
+        .wr_name{
             width: 100px;
         }
-        .board_item .wr_wd{
-            width: 70px;
+        .wr_wd{
+            width: 100px;
         }
-        .board_item .wr_rc{
+        .wr_rc{
             width: 50px;
         }
 
@@ -119,14 +66,10 @@
     
     <script>
         $(document).ready(function(){
-            // $('.board_item .wr_title').on('click', function(){
-            //     console.log($(this).prev().text());
-
-            //     var id = $(this).prev().text();
-
-            //     var url = '/board/' + id;
-            //     window.location.replace(url);
-            // });
+            $('.navbar-nav').eq(0).children().each(function(){
+                // console.log($(this).text());
+                $(this).toggleClass('active');
+            })
         });
     </script>
 </head>
@@ -134,34 +77,39 @@
     <div class="content">
         <%- include('../partials/nav'); %>
 
-        <div class="list_board">
-            <div class="board_head">
-                <span class="wr_num">번호</span>
-                <span class="wr_title">제목</span>
-                <span class="wr_name">이름</span>
-                <span class="wr_wd">날짜</span>
-                <span class="wr_rc">조회</span>
-            </div>
+        <div class="container mb-3">
+            <h2 class="mb-3">Board</h2>
 
-            <div class="board_body">
-                <% data.forEach(function (item, index){ %>
-                    <div class="board_item">
-                        <div class="wr_num"><%= item.num %></div>
-                        <div class="wr_title">
-                            <a href="/board/<%= item.num %>">
-                                <%= item.title %>
-                            </a>
-                        </div>
-                        <div class="wr_name"><%= item.name %></div>
-                        <div class="wr_wd"><%= item.wd %></div>
-                        <% if (item.readcount > 9) { %>
-                            <div class="wr_rc">9+</div>
-                        <% }else{ %>
-                            <div class="wr_rc"><%= item.readcount %></div>
-                        <% } %>
-                    </div>
-                <% }); %>
-            </div>
+            <table class="table table-hover table-sm board-bottom">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="wr_num">번호</th>
+                        <th scope="col" class="wr_title">제목</th>
+                        <th scope="col" class="wr_name">이름</th>
+                        <th scope="col" class="wr_wd">날짜</th>
+                        <th scope="col" class="wr_rc">조회</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <% data.forEach(function (item, index){ %>
+                        <tr>
+                            <td scope="row" class="wr_num"><%= item.num %></td>
+                            <td class="wr_title"><a href="/board/<%= item.num %>"><%= item.title %></a></td>
+                            <td class="wr_name"><%= item.name %></td>
+                            <td class="wr_wd"><%= item.wd %></td>
+                            <td class="wr_rc">
+                                <% if (item.readcount > 9) { %>
+                                    9+
+                                <% }else{ %>
+                                    <%= item.readcount %>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+
             <div class="bottom_button">
                 <a href="/creating_post" class="creat_post_btn" role="button">글 작성</a>
             </div>

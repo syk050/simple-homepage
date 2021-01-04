@@ -32,7 +32,8 @@ server.listen(52273, function () {
 app.get('/', function (request, response) {
     console.log('root In');
 
-    response.redirect('/board');
+    // response.redirect('/board');
+    response.render('pages/home');
 });
 
 // 게시판 화면
