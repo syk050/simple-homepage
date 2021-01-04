@@ -49,7 +49,7 @@ app.get('/board', function(request, response){
     }
   });
   
-})
+});
 
 // 게시글 선택
 app.get('/board/:id', function(request, response){
