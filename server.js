@@ -16,7 +16,7 @@ io.attach(server);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
-app.use(methodOverride('_method'));
+// app.use(methodOverride('_method'));
 
 
 // 서버 실행

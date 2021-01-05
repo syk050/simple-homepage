@@ -41,12 +41,16 @@
                 <div class="d-flex justify-content-between">
                     <span class="text-secondary">&nbsp;&nbsp;<%= data.name %></span>
 
-                    <div class="btn-group btn-group-sm" role="group">
-                        <a href="/edit/<%= data.num %>" class="btn btn-secondary" role="button">
-                            <i class="fa fa-pencil-square-o"></i>
-                            수정
-                        </a>
-                        <a href="/delete/<%= data.num %>" onclick="confirm('삭제하시겠습니까?')?this.parentElement.submit():null;" class="btn btn-secondary" role="button">삭제</a>
+                    
+                    <form action="/board/delete/<%= data.num %>" method="GET">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="/board/edit/<%= data.num %>" class="btn btn-secondary" role="button">
+                                <i class="fa fa-pencil-square-o"></i>
+                                수정
+                            </a>
+                            <a href="#" onclick="confirm('삭제하시겠습니까?')?this.parentElement.parentElement.submit():null;" class="btn btn-secondary" role="button">삭제</a>
+                        </div>
+                    </form>
                     </div>
                 </div>
                 

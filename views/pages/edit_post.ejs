@@ -47,9 +47,11 @@
                     <textarea name="content" maxlength="1000" rows="5" class="form-control"><%= data.content %></textarea>
                   </div>
           
-                  <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <a class="btn btn-danger" href="/board/<%= data._id %>">Back</a>
+                  <div class="d-flex justify-content-end ">
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a class="btn btn-danger" href="/board/<%= data._id %>">Back</a>
+                    </div>
                   </div>
             </form>
 

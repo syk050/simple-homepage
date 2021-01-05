@@ -21,44 +21,7 @@ router.get('/', function(request, response){
     });
     
   });
-  
-// 게시글 선택
-router.get('/:id', function(request, response){
-    console.log('board id In : ' + request.params.id);  
-  
-    // 조회수 증가
-    var rc = 0;
-    client.query('SELECT readcount FROM board WHERE num = ?', [
-      request.params.id
-    ], function(err, data){
-      if(err){
-        console.log(err);
-      }else{
-        // console.log(data[0].readcount)
-        if (data[0].readcount < 10){
-          rc = data[0].readcount + 1;
-  
-          client.query('UPDATE board SET readcount=? WHERE num=?', [
-            rc, request.params.id
-          ]);
-        }
-      }
-    });
-  
-    // 게시글 표시
-    client.query('SELECT * FROM board WHERE num = ?', [
-      request.params.id
-    ], function(error, result){
-      if (result[0] == undefined){
-        response.writeHead(404);
-        response.end('Not found');
-      }else{
-        response.render('pages/post', {data: result[0]});
-      }
-    });
-  
-});
-  
+
 // 게시글 작성
 router.get('/creating_post', function(request, response){
     console.log('creating_post');
@@ -107,9 +70,48 @@ router.post('/edit/:id', function(request, response){
   
 // 게시글 삭제
 router.get('/delete/:id', function(request, response){
+    console.log('delete id: ' + request.params.id)
+
     client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
       response.redirect('/board');
    });
+});
+
+// 게시글 선택
+router.get('/:id', function(request, response){
+    console.log('board id In : ' + request.params.id);  
+  
+    // 조회수 증가
+    var rc = 0;
+    client.query('SELECT readcount FROM board WHERE num = ?', [
+      request.params.id
+    ], function(err, data){
+      if(err){
+        console.log(err);
+      }else{
+        // console.log(data[0].readcount)
+        if (data[0].readcount < 10){
+          rc = data[0].readcount + 1;
+  
+          client.query('UPDATE board SET readcount=? WHERE num=?', [
+            rc, request.params.id
+          ]);
+        }
+      }
+    });
+  
+    // 게시글 표시
+    client.query('SELECT * FROM board WHERE num = ?', [
+      request.params.id
+    ], function(error, result){
+      if (result[0] == undefined){
+        response.writeHead(404);
+        response.end('Not found');
+      }else{
+        response.render('pages/post', {data: result[0]});
+      }
+    });
+  
 });
 
 module.exports = router;
