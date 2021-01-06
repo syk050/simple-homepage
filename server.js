@@ -16,7 +16,7 @@ io.attach(server);
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
-// app.use(methodOverride('_method'));
+app.use(methodOverride('_method'));
 
 // Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
 // app.use(express.json()); // json으로 받아들인 정보를 분석함

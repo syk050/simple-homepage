@@ -22,21 +22,21 @@ router.get('/', function (request, response) {
     })
 });
 
-// 로그인
+// 로그인 페이지
 router.get('/login', function(request, response){
     console.log('login page');
 
     response.render('account/login');
 });
 
-// 회원가입
+// 회원가입 페이지
 router.get('/join', function(request, response){
     console.log('join page');
 
     response.render('account/join');
 });
 
-// 회원가입 신청
+// 회원가입 요청
 router.post('/join', function(request, response){
     console.log('join post');
 
@@ -80,10 +80,78 @@ router.post('/join', function(request, response){
     
 });
 
+// 사용자 수정 페이지
+router.get('/edit/:id', function(request, response){
+    console.log('edit user id: ' + request.params.id);
+
+    client.query('SELECT id, name FROM users WHERE id = ?', [
+        request.params.id
+    ], function(err, result){
+        if(err){
+            console.log(err)
+            response.redirect('/user/' + request.params.id);
+        }else{
+            response.render('account/edit_user', {data: result[0]});
+        }
+    });
+
+});
+
+// 사용자 수정 요청
+router.put('/edit/:id', function(request, response){
+    console.log('edit put user id: ' + request.params.id);
+
+    
+    var body = request.body;
+    // 새로운 비밀번호와 비밀번호 확인이 다른 경우
+    if (body.newPassword != body.passwordConfirmation){
+
+        response.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+        response.write('<h1>패스워드 불일치</h1>');
+        response.write('<br><a href="/user/edit/' + request.params.id + '"> re edit </a>');
+        response.end();
+    }else{
+        client.query('SELECT * FROM users WHERE id = ?', [
+            request.params.id
+        ], function(err, result){
+            if(err){
+                console.log(err)
+            }else{
+                var originalPw = result[0].password;
+
+                // 원래 패스워드와 입력한 패스워드가 다른 경우
+                if (body.currentPassword != originalPw){
+                    response.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+                    response.write('<h1>틀린 패스워드</h1>');
+                    response.write('<br><a href="/user/edit/' + request.params.id + '"> re edit </a>');
+                    response.end();
+                }else{
+                    var data = {
+                        name: body.name,
+                        password: body.newPassword
+                    }
+
+                    updateUser(request.params.id, data, function(err, result){
+                        if(err){
+                            console.log(err)
+                        }
+                    });
+                }
+    
+            }
+    
+            response.redirect('/user/' + request.params.id);
+        });
+    }
+
+    
+});
+
+// 사용자 보기
 router.get('/:id', function(request, response){
     console.log('show user id: ' + request.params.id);
 
-    client.query('SELECT * FROM users WHERE id = ?', [
+    client.query('SELECT id, name FROM users WHERE id = ?', [
         request.params.id
     ], function(err, result){
         if(err){
@@ -96,8 +164,7 @@ router.get('/:id', function(request, response){
 });
 
 // 사용자 추가
-var addUser = function(data, callback)
-{
+var addUser = function(data, callback){
     console.log('addUser 호출');
 
     //users 테이블에 데이터 추가
@@ -116,6 +183,23 @@ var addUser = function(data, callback)
         }
     );
   
+}
+
+var updateUser = function(id, data, callback){
+    console.log('updateUser 호출');
+
+    var exec = client.query('UPDATE users SET ? WHERE id=?', [
+        data, id
+    ], function(err, result){
+        console.log('실행된 SQL : ' + exec.sql);
+
+        if(err){
+            console.log(err);
+            callback(err, null);
+        }else{
+            callback(null, result);
+        }
+    });
 }
 
 module.exports = router;
