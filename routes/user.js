@@ -12,8 +12,14 @@ var io = socketio();
 router.get('/', function (request, response) {
     console.log('user page in');
 
-    // response.redirect('/user/login');
-    // response.render('pages/home');
+    client.query('SELECT id, name FROM users', function(err, result){
+        if (err){
+            console.log(err);
+            response.redirect('/');
+        }else{
+            response.render('account/users', {data: result});
+        }
+    })
 });
 
 // 로그인
@@ -74,6 +80,22 @@ router.post('/join', function(request, response){
     
 });
 
+router.get('/:id', function(request, response){
+    console.log('show user id: ' + request.params.id);
+
+    client.query('SELECT * FROM users WHERE id = ?', [
+        request.params.id
+    ], function(err, result){
+        if(err){
+            console.log(err)
+            response.redirect('/user');
+        }else{
+            response.render('account/show', {data: result[0]});
+        }
+    });
+});
+
+// 사용자 추가
 var addUser = function(data, callback)
 {
     console.log('addUser 호출');
