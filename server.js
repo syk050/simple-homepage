@@ -18,6 +18,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
 // app.use(methodOverride('_method'));
 
+// Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
+// app.use(express.json()); // json으로 받아들인 정보를 분석함
+// app.use(express.urlencoded({ extended: true }));
+// // 이 옵션이 false면 노드의 querystring 모듈을 사용하여 쿼리스트링을 해석하고, 
+// // true면 qs 모듈을 사용하여 쿼리스트링을 해석한다
+
 
 // 서버 실행
 server.listen(52273, function () {
@@ -28,27 +34,13 @@ server.listen(52273, function () {
 // Routes
 app.use('/', require('./routes/home'));
 app.use('/board', require('./routes/board'));
+app.use('/user', require('./routes/user'));
 
 
 // 통신
 io.sockets.on('connection', function(socket){
   console.log('io connection');
 
-  // 소비자가 상품 구매
-  socket.on('itemBuy', function(data){
-    console.log('itemBuy : ' + data);
-
-    client.query('INSERT INTO customer (id, name, modelnumber, series) SELECT * FROM products WHERE id = ?', [
-      data
-    ], function(error, result){
-      if (error){
-        console.log(error);
-      }
-      else{
-        io.sockets.emit('itemBuySignal');
-      }
-    });
-  });
 
   // 관리자가 상품 구매 취소
   socket.on('itemCancel', function(data){
@@ -69,23 +61,8 @@ io.sockets.on('connection', function(socket){
     });
   });
 
-  // 관리자가 상품 구매 수락
-  socket.on('itemPermit', function(data){
-    console.log('itemPermit : ' + data);
-
-    client.query('UPDATE customer SET status = 1 WHERE id = ?', [
-      data
-    ], function(error, result){
-      if(error){
-        console.log(error);
-      }else{
-        client.query('SELECT * FROM customer WHERE id = ?', [
-          data
-        ], function(error, result){
-          io.sockets.emit('itemPermitSignal', result[0]);
-        });
-      }
-    })
+  socket.on('test', function(){
+    console.log('test');
   });
 
 });

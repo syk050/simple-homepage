@@ -10,4 +10,4 @@ router.get('/', function (request, response) {
     response.render('pages/home');
 });
 
-module.exports = router; // 3
+module.exports = router;

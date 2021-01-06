@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>회원가입</title>
+    <%- include('../partials/head'); %>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body{
+            margin: 0;
+        }
+
+        .content{
+            margin: 0 auto;
+            padding-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 8px rgb(0, 0, 0, 0.5)
+        }
+    </style>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        window.onload = function(){
+            var socket = io.connect();
+
+            // // 구매 버튼을 클릭 시
+            // $(window).on('click', function(e){
+            //     // console.log(e.target);
+
+            //     if (e.target == $('.item_buy_button')[0]){
+            //         $('.modal').css('display', 'none');
+
+            //         socket.emit('itemBuy', $('.item_buy_button').attr('item_id'));
+            //     }
+            // });
+            
+            // 패스워드 불일치
+            socket.on('pw_not_matched', function(){
+                socket.emit('test');
+
+                console.log('password_not_matched');
+
+                $('#passwordCon').val("");
+            });
+
+        }
+    </script>
+</head>
+<body>
+    <div class="content">
+        <%- include('../partials/nav'); %>
+
+        <div class="container mb-3">
+
+            <h3 class="contentBoxTop mb-3">Join</h3>
+
+            <form method="post">
+
+                <div class="form-group row">
+                  <label for="id" class="col-sm-3 col-form-label">아이디</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="id" name="id" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="name" class="col-sm-3 col-form-label">닉네임</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="name" name="name" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="password" class="col-sm-3 col-form-label">비밀번호</label>
+                  <div class="col-sm-9">
+                    <input type="password" id="password" name="password" class="form-control" required>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="passwordConfirmation" class="col-sm-3 col-form-label">비밀번호 확인</label>
+                  <div class="col-sm-9 col-sm-offset-3">
+                    <input type="password" id="passwordCon" name="passwordConfirmation" value="" class="form-control" required>
+                  </div>
+                </div>
+        
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+        </div>
+        
+    </div>
+</body>
+</html>
