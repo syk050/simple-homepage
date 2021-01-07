@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var express = require('express');
 var router = express.Router();
 var socketio = require('socket.io');
+var bcrypt = require('bcryptjs');
 
 var client = mysql.createConnection({
     user: 'root',   password: '1234',  database: 'bulletin_board'
@@ -55,10 +56,12 @@ router.post('/join', function(request, response){
         var user = {
             id: body.id,
             name: body.name,
-            password: body.password,
+            password: bcrypt.hashSync(body.password),
             created: today
         }
-
+        // console.log(user);
+        // console.log(user.password.length);
+        
         addUser(user, function(err, result){
             if(err){
                 // console.log(err.code)
@@ -120,7 +123,7 @@ router.put('/edit/:id', function(request, response){
                 var originalPw = result[0].password;
 
                 // 원래 패스워드와 입력한 패스워드가 다른 경우
-                if (body.currentPassword != originalPw){
+                if(!bcrypt.compareSync(body.currentPassword, originalPw)){
                     response.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
                     response.write('<h1>틀린 패스워드</h1>');
                     response.write('<br><a href="/user/edit/' + request.params.id + '"> re edit </a>');
@@ -128,7 +131,7 @@ router.put('/edit/:id', function(request, response){
                 }else{
                     var data = {
                         name: body.name,
-                        password: body.newPassword
+                        password: bcrypt.hashSync(body.newPassword)
                     }
 
                     updateUser(request.params.id, data, function(err, result){
@@ -145,6 +148,17 @@ router.put('/edit/:id', function(request, response){
     }
 
     
+});
+
+// 사용자 삭제 요청
+router.delete('/delete/:id', function(request, response){
+    console.log('delete user id: ' + request.params.id)
+
+    client.query('DELETE FROM users WHERE id=?', [
+        request.params.id
+    ], function () {
+        response.redirect('/user');
+     });
 });
 
 // 사용자 보기

@@ -46,28 +46,40 @@
                 <div class="form-group row">
                   <label for="id" class="col-sm-3 col-form-label">아이디</label>
                   <div class="col-sm-9">
-                    <input type="text" id="id" name="id" class="form-control" required>
+                    <input type="text" id="id" name="id" class="form-control <%= (errors.id)?'is-invalid':'' %>" required>
+                    <% if(errors.id){ %>
+                      <span class="invalid-feedback"><%= errors.id.message %></span>
+                    <% } %>
                   </div>
                 </div>
 
                 <div class="form-group row">
                   <label for="name" class="col-sm-3 col-form-label">닉네임</label>
                   <div class="col-sm-9">
-                    <input type="text" id="name" name="name" class="form-control" required>
+                    <input type="text" id="name" name="name" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
+                    <% if(errors.name){ %>
+                      <span class="invalid-feedback"><%= errors.name.message %></span>
+                    <% } %>
                   </div>
                 </div>
 
                 <div class="form-group row">
                   <label for="password" class="col-sm-3 col-form-label">비밀번호</label>
                   <div class="col-sm-9">
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" class="form-control <%= (errors.password)?'is-invalid':'' %>" required>
+                    <% if(errors.password){ %>
+                      <span class="invalid-feedback"><%= errors.password.message %></span>
+                    <% } %>
                   </div>
                 </div>
 
                 <div class="form-group row">
                   <label for="passwordConfirmation" class="col-sm-3 col-form-label">비밀번호 확인</label>
                   <div class="col-sm-9 col-sm-offset-3">
-                    <input type="password" id="passwordCon" name="passwordConfirmation" value="" class="form-control" required>
+                    <input type="password" id="passwordCon" name="passwordConfirmation" value="" class="form-control <%= (errors.passwordConfirmation)?'is-invalid':'' %>" required>
+                    <% if(errors.passwordConfirmation){ %>
+                      <span class="invalid-feedback"><%= errors.passwordConfirmation.message %></span>
+                    <% } %>
                   </div>
                 </div>
         
