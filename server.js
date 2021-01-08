@@ -2,8 +2,11 @@ var fs = require('fs');
 var ejs = require('ejs');
 var express = require('express');
 var socketio = require('socket.io');
+var flash = require('connect-flash');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var methodOverride = require('method-override')
+
 
 // 서버 생성
 var app = express();
@@ -17,6 +20,16 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
 app.use(methodOverride('_method'));
+
+// flash를 초기화, req.flash 사용가능
+// req.flash(문자열, 저장할_값).
+// flash는 배열로 저장, 순서대로 배열로 저장
+// req.flash(문자열) 문자열에 저장된 값들을 배열로 불러옵니다. 
+// 저장된 값이 없다면 빈 배열([])을 return합니다.
+app.use(flash());
+
+// secret은session을 hash화하는데
+app.use(session({secret:'MySecret', resave:true, saveUninitialized:true}));
 
 // Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
 // app.use(express.json()); // json으로 받아들인 정보를 분석함
