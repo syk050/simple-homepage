@@ -46,7 +46,7 @@
                 <div class="form-group row">
                   <label for="id" class="col-sm-3 col-form-label">아이디</label>
                   <div class="col-sm-9">
-                    <input type="text" id="id" name="id" value="<%= user.id %>" class="form-control <%= (errors.id)?'is-invalid':'' %>" required>
+                    <input type="text" id="id" name="id" value="<%= (errors.id)?'':inputData.id %>" class="form-control <%= (errors.id)?'is-invalid':'' %>" required>
                     <% if(errors.id){ %>
                       <span class="invalid-feedback"><%= errors.id %></span>
                     <% } %>
@@ -56,7 +56,7 @@
                 <div class="form-group row">
                   <label for="name" class="col-sm-3 col-form-label">닉네임</label>
                   <div class="col-sm-9">
-                    <input type="text" id="name" name="name" value="<%= user.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
+                    <input type="text" id="name" name="name" value="<%= (errors.name)?'':inputData.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
                     <% if(errors.name){ %>
                       <span class="invalid-feedback"><%= errors.name %></span>
                     <% } %>
@@ -66,7 +66,7 @@
                 <div class="form-group row">
                   <label for="password" class="col-sm-3 col-form-label">비밀번호</label>
                   <div class="col-sm-9">
-                    <input type="password" id="password" name="password" value="<%= user.password %>" class="form-control <%= (errors.pw)?'is-invalid':'' %>" required>
+                    <input type="password" id="password" name="password" value="<%= (errors.pw)?'':inputData.password %>" class="form-control <%= (errors.pw)?'is-invalid':'' %>" required>
                     <% if(errors.pw){ %>
                       <span class="invalid-feedback"><%= errors.pw %></span>
                     <% } %>
@@ -76,7 +76,7 @@
                 <div class="form-group row">
                   <label for="passwordConfirmation" class="col-sm-3 col-form-label">비밀번호 확인</label>
                   <div class="col-sm-9 col-sm-offset-3">
-                    <input type="password" id="passwordCon" name="passwordConfirmation" value="<%= user.passwordConfirmation %>" class="form-control <%= (errors.pwComfirm)?'is-invalid':'' %>" required>
+                    <input type="password" id="passwordCon" name="passwordConfirmation" value="<%= (errors.pwComfirm)?'':inputData.passwordConfirmation %>" class="form-control <%= (errors.pwComfirm)?'is-invalid':'' %>" required>
                     <% if(errors.pwComfirm){ %>
                       <span class="invalid-feedback"><%= errors.pwComfirm %></span>
                     <% } %>
