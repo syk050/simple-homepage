@@ -205,48 +205,6 @@ router.put('/edit/:id', function(request, response){
             });
         }
     })
-    // 새로운 비밀번호와 비밀번호 확인이 다른 경우
-    // if (body.newPassword != body.passwordConfirmation){
-
-    //     response.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
-    //     response.write('<h1>패스워드 불일치</h1>');
-    //     response.write('<br><a href="/user/edit/' + request.params.id + '"> re edit </a>');
-    //     response.end();
-    // }else{
-    //     client.query('SELECT * FROM users WHERE id = ?', [
-    //         request.params.id
-    //     ], function(err, result){
-    //         if(err){
-    //             console.log(err)
-    //         }else{
-    //             var originalPw = result[0].password;
-
-    //             // 원래 패스워드와 입력한 패스워드가 다른 경우
-    //             if(!bcrypt.compareSync(body.currentPassword, originalPw)){
-    //                 response.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
-    //                 response.write('<h1>틀린 패스워드</h1>');
-    //                 response.write('<br><a href="/user/edit/' + request.params.id + '"> re edit </a>');
-    //                 response.end();
-    //             }else{
-    //                 var data = {
-    //                     name: body.name,
-    //                     password: bcrypt.hashSync(body.newPassword)
-    //                 }
-
-    //                 updateUser(request.params.id, data, function(err, result){
-    //                     if(err){
-    //                         console.log(err)
-    //                     }
-    //                 });
-    //             }
-    
-    //         }
-    
-    //         response.redirect('/user/' + request.params.id);
-    //     });
-    // }
-
-    
 });
 
 // 사용자 삭제 요청

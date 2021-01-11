@@ -7,18 +7,21 @@ var client = mysql.createConnection({
     user: 'root',   password: '1234',  database: 'bulletin_board'
 });
 
+// login시에 user를 어떻게 session에 저장할지
 passport.serializeUser(function(user, done){
     console.log('serializeUser: ' + JSON.stringify(user))
 
     done(null, user.id);
 });
+
+// request시에 session에서 어떻게 user object를 만들지
 passport.deserializeUser(function(id, done){
-    client.query('SELECT * FROM users WHERE id = ?', [id], 
+    client.query('SELECT id FROM users WHERE id = ?', [id], 
         function(err, result){
             if(err){
                 console.log(err);
             }
-            console.log('deserializeUser: ' , result);
+            console.log('deserializeUser: ' , result[0]);
 
             done(err, result[0]);
     });

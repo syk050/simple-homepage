@@ -47,8 +47,12 @@ app.use(passport.session());
 app.use(function(request, response, next){
   // req.isAuthenticated()는 passport에서 제공하는 함수
   // 현재 로그인이 되어있는지 아닌지를 true,false로 return
+  // 로그인이 되면 session으로 부터 user를 deserialize하여 생성
   response.locals.isAuthenticated = request.isAuthenticated();
+
+  // 로그인된 user의 정보를 불러오는데 사용됩니다.
   response.locals.currentUser = request.user;
+  console.log('currentUser: ' + JSON.stringify(request.user));
   next();
 });
 
