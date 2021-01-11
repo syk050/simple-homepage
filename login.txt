@@ -1,0 +1,11 @@
+로그인 버튼이 클릭되면 routes/user.js의 [post] /login route 실행
+
+다음으로 config/passport.js의 local-strategy의 코드가 실행
+
+로그인이 성공하면 config/passport.js의 serialize코드가 실행
+
+마지막으로 routes/user.js의 [post] /login route의 successRedirect의 
+route으로 redirect
+
+로그인이 된 이후에는 모든 request가
+config/passport.js의 deserialize코드를 거침
