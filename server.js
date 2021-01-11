@@ -5,7 +5,8 @@ var socketio = require('socket.io');
 var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var methodOverride = require('method-override')
+var passport = require('./config/passport');
+var methodOverride = require('method-override');
 
 
 // 서버 생성
@@ -16,6 +17,12 @@ var server = require('http').createServer(app);
 io.attach(server);
 
 // app.use(express.static(__dirname + '/public'));
+
+// Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
+// app.use(express.json()); // json으로 받아들인 정보를 분석함
+// app.use(express.urlencoded({ extended: true }));
+// // 이 옵션이 false면 노드의 querystring 모듈을 사용하여 쿼리스트링을 해석하고, 
+// // true면 qs 모듈을 사용하여 쿼리스트링을 해석한다
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({  extended: false   }));
@@ -31,11 +38,19 @@ app.use(flash());
 // secret은session을 hash화하는데
 app.use(session({secret:'MySecret', resave:true, saveUninitialized:true}));
 
-// Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
-// app.use(express.json()); // json으로 받아들인 정보를 분석함
-// app.use(express.urlencoded({ extended: true }));
-// // 이 옵션이 false면 노드의 querystring 모듈을 사용하여 쿼리스트링을 해석하고, 
-// // true면 qs 모듈을 사용하여 쿼리스트링을 해석한다
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.use에 함수를 넣은 것을 middleware
+// request가 올때마다 route에 상관없이 실행
+// app.use들 중에 위에 있는 것 부터 순서대로 실행
+app.use(function(request, response, next){
+  // req.isAuthenticated()는 passport에서 제공하는 함수
+  // 현재 로그인이 되어있는지 아닌지를 true,false로 return
+  response.locals.isAuthenticated = request.isAuthenticated();
+  response.locals.currentUser = request.user;
+  next();
+});
 
 
 // 서버 실행

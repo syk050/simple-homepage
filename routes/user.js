@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
+var passport = require('../config/passport');
 
 var client = mysql.createConnection({
     user: 'root',   password: '1234',  database: 'bulletin_board'
@@ -25,7 +26,47 @@ router.get('/', function (request, response) {
 router.get('/login', function(request, response){
     console.log('login page');
 
-    response.render('account/login');
+    var id = request.flash('id')[0];
+    var errors = request.flash('errors')[0] || {};
+
+    response.render('account/login', {
+        id: id, 
+        errors: errors
+    });
+});
+
+// post 로그인
+router.post('/login', function(request, response, next){
+    console.log('post 로그인');
+
+    var errors = {};
+    var isValid = true;
+
+    if(!request.body.id){
+        isValid = false;
+        errors.id = '닉네임을 입력해 주세요.';
+    }
+    if(!request.body.password){
+        isValid = false;
+        errors.password = '비밀번호를 입력해 주세요.';
+    }
+
+    if(isValid){
+        console.log('통과');
+        next();
+    }else{
+        console.log('에러');
+        request.flash('errors', errors);
+    }
+}, passport.authenticate('local-login', {
+    successRedirect: '/',
+    failureRedirect: '/user/login'
+}));
+
+// 로그아웃
+router.get('/logout', function(request, response){
+    request.logout();
+    response.redirect('/');
 });
 
 // 회원가입 페이지
