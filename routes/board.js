@@ -27,15 +27,28 @@ router.get('/creating_post', function(request, response){
 // 게시글 작성 완료
 router.post('/creating_post', function(request, response){
     console.log('creat_post');
-  
-    var body = request.body;
-    client.query('INSERT INTO board (name, title, content) VALUES ("undefiend", ?, ?)',[
-      body.title, body.content
-    ], function(err){
-      if(err){
-        console.log(err)
-      }
-      response.redirect('/board');
+    console.log('creating_post: ' + request.user.id);
+
+    var user= {};
+    client.query('SELECT numid, name FROM users WHERE id = ?', [request.user.id], 
+    function(err, result){
+        if (err){
+          console.log('err: ' + err);
+        }else{
+          // console.log('result: ' + JSON.stringify(result[0]));
+          user['name'] = result[0].name;
+          user['numid'] = result[0].numid;
+
+          var body = request.body;
+          client.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
+              user.name, body.title, body.content, user.numid
+          ], function(err){
+              if(err){
+                  console.log(err)
+              }   
+              response.redirect('/board');
+          });
+        }
     });
 });
   
