@@ -1,12 +1,8 @@
-var mysql = require('mysql');
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var passport = require('../config/passport');
-
-var client = mysql.createConnection({
-    user: 'root',   password: '1234',  database: 'bulletin_board'
-});
+var client = require('../models/DBConnection');
 
 
 router.get('/', function (request, response) {
