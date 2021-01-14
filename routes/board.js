@@ -20,7 +20,7 @@ router.get('/', function(request, response){
       }
     });
     
-  });
+});
 
 // 게시글 작성
 router.get('/creating_post', function(request, response){
