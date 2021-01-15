@@ -3,19 +3,29 @@ var router = express.Router();
 var client = require('../models/DBConnection');
 const util = require('../util');
 
-
-router.get('/', function(request, response){
+// await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
+// await는 해당 Promise가 완료될 때까지 다음 코드로 진행하지 않고 기다림
+router.get('/', async function(request, response){
     console.log('board In')
-  
-    client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount FROM board ORDER BY num DESC', function(err, result){
-      if (err){
-        console.log(err);
-      }
-      else{
-        response.render('pages/board', {data: result});
-      }
+
+    var page = Math.max(1, parseInt(request.query.page));
+    var limit = Math.max(1, parseInt(request.query.limit));
+    page = !isNaN(page)?page:1;
+    limit = !isNaN(limit)?limit:1;
+
+    var skip = (page-1) * limit;
+    var count = await client.query('SELECT COUNT(*) FROM board');
+    var maxPage = Math.ceil(count/limit);
+    var boards = await client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board order by num DESC LIMIT ? OFFSET ?', [
+      limit, skip
+    ]);
+
+    response.render('pages/board', {
+      board: boards,
+      currentPage: page,
+      maxPage: maxPage,
+      limit: limit
     });
-    
 });
 
 // 게시글 작성
@@ -84,6 +94,19 @@ router.get('/delete/:id', util.isLoggedin, checkPermission, function(request, re
     client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
       response.redirect('/board');
    });
+});
+
+router.get('/__test__', function(request, response){
+  console.log('__test__ : ');  
+
+  var i = 0;
+  for(i=0; i<10; i++){
+    client.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
+      'test', 'Test Post' + i, 'Test Post' + i, 1
+    ]);
+  }
+  response.redirect('/board');
+
 });
 
 // 게시글 선택
