@@ -9,14 +9,14 @@ var client = mysql.createConnection({
 
 // login시에 user를 어떻게 session에 저장할지
 passport.serializeUser(function(user, done){
-    console.log('serializeUser: ' + JSON.stringify(user))
+    // console.log('serializeUser: ' + JSON.stringify(user))
 
     done(null, user.id);
 });
 
 // request시에 session에서 어떻게 user object를 만들지
 passport.deserializeUser(function(id, done){
-    client.query('SELECT id FROM users WHERE id = ?', [id], 
+    client.query('SELECT numid, id FROM users WHERE id = ?', [id], 
         function(err, result){
             if(err){
                 console.log(err);
@@ -36,7 +36,7 @@ passport.use('local-login',
         client.query('SELECT * FROM users WHERE id = ?', [
             username
         ], function(err, result){
-                console.log('passport: ' + JSON.stringify(result[0]));
+                // console.log('passport: ' + JSON.stringify(result[0]));
 
                 if (err){
                     console.log(err);

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var client = require('../models/DBConnection');
+const util = require('../util');
 
 
 router.get('/', function(request, response){
@@ -18,14 +19,14 @@ router.get('/', function(request, response){
 });
 
 // 게시글 작성
-router.get('/creating_post', function(request, response){
+router.get('/creating_post', util.isLoggedin, function(request, response){
     console.log('creating_post');
   
     response.render('pages/posting');
 });
   
 // 게시글 작성 완료
-router.post('/creating_post', function(request, response){
+router.post('/creating_post', util.isLoggedin, function(request, response){
     console.log('creat_post');
     console.log('creating_post: ' + request.user.id);
 
@@ -53,7 +54,7 @@ router.post('/creating_post', function(request, response){
 });
   
 // 게시글 수정
-router.get('/edit/:id', function(request, response){
+router.get('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('edit id In : ' + request.params.id);
   
     client.query('SELECT * FROM board WHERE num = ?', [
@@ -65,7 +66,7 @@ router.get('/edit/:id', function(request, response){
 });
   
 // 게시글 수정 완료
-router.post('/edit/:id', function(request, response){
+router.post('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('update id: ' + request.params.id)
   
     var body = request.body
@@ -77,7 +78,7 @@ router.post('/edit/:id', function(request, response){
 });
   
 // 게시글 삭제
-router.get('/delete/:id', function(request, response){
+router.get('/delete/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('delete id: ' + request.params.id)
 
     client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
@@ -123,3 +124,18 @@ router.get('/:id', function(request, response){
 });
 
 module.exports = router;
+
+// 기록된 author와 로그인된 user.id를 비교해
+function checkPermission(request, response, next){
+  // 게시판 숫자
+  // console.log('boderNum: ' + JSON.stringify(request.params.id));
+  // console.log('checkPermission: ' + JSON.stringify(request.user.numid));
+
+  client.query('SELECT author FROM board WHERE num = ?', [request.params.id
+  ], function(err, board){
+    if(err) return JSON.stringify(err);
+    if(board[0].author != request.user.numid) return util.noPermission(request, response);
+
+    next();
+  });
+}

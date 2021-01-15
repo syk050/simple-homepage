@@ -3,19 +3,21 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var passport = require('../config/passport');
 var client = require('../models/DBConnection');
+const util = require('../util');
 
 
 router.get('/', function (request, response) {
     console.log('user page in');
 
-    client.query('SELECT id, name FROM users', function(err, result){
-        if (err){
-            console.log(err);
-            response.redirect('/');
-        }else{
-            response.render('account/users', {data: result});
-        }
-    })
+    // client.query('SELECT id, name FROM users', function(err, result){
+    //     if (err){
+    //         console.log(err);
+    //         response.redirect('/');
+    //     }else{
+    //         response.render('account/users', {data: result});
+    //     }
+    // })
+    response.redirect('/');
 });
 
 // 로그인 페이지
@@ -127,7 +129,7 @@ router.post('/join', function(request, response){
 });
 
 // 사용자 수정 페이지
-router.get('/edit/:id', function(request, response){
+router.get('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('edit user id: ' + request.params.id);
 
     var inputData = request.flash('inputData')[0] || {};
@@ -147,7 +149,7 @@ router.get('/edit/:id', function(request, response){
 });
 
 // 사용자 수정 요청
-router.put('/edit/:id', function(request, response){
+router.put('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('edit put user id: ' + request.params.id);
 
     
@@ -204,7 +206,7 @@ router.put('/edit/:id', function(request, response){
 });
 
 // 사용자 삭제 요청
-router.delete('/delete/:id', function(request, response){
+router.delete('/delete/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('delete user id: ' + request.params.id)
 
     client.query('DELETE FROM users WHERE id=?', [
@@ -215,7 +217,7 @@ router.delete('/delete/:id', function(request, response){
 });
 
 // 사용자 보기
-router.get('/:id', function(request, response){
+router.get('/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('show user id: ' + request.params.id);
 
     client.query('SELECT id, name FROM users WHERE id = ?', [
@@ -312,3 +314,15 @@ var check_regex = function(data, callback){
 }
 
 module.exports = router;
+
+// 기록된 author와 로그인된 user.id를 비교해
+function checkPermission(request, response, next){
+    // 게시판 숫자
+    // console.log('boderNum: ' + JSON.stringify(request.params.id));
+    // console.log('checkPermission: ' + JSON.stringify(request.user.numid));
+
+    if(request.params.id != request.user.id) return util.noPermission(request, response);
+  
+    next();
+
+}
