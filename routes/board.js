@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var client = require('../models/DBConnection');
+var pool = require('../models/DBConnection');
 const util = require('../util');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
@@ -14,11 +14,17 @@ router.get('/', async function(request, response){
     limit = !isNaN(limit)?limit:1;
 
     var skip = (page-1) * limit;
-    var count = await client.query('SELECT COUNT(*) FROM board');
+    var [row, field] = await pool.query('SELECT COUNT(*) AS count FROM board');
+    var count = row[0].count;
     var maxPage = Math.ceil(count/limit);
-    var boards = await client.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board order by num DESC LIMIT ? OFFSET ?', [
+    // console.log('maxPage: ' + maxPage);
+    // console.log('limit: ' + limit);
+    // console.log('skip: ' + skip);
+
+    var [row, field] = await pool.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board order by num DESC LIMIT ? OFFSET ?', [
       limit, skip
     ]);
+    var boards = row;
 
     response.render('pages/board', {
       board: boards,

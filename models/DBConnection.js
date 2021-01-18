@@ -1,8 +1,10 @@
-var mysql = require('mysql');
+var mysql = require('mysql2/promise');
 
-var client = mysql.createConnection({
-    user: 'root',   password: '1234',  database: 'bulletin_board'
+var pool = mysql.createPool({
+    user: 'root',
+    password: '1234',
+    database: 'bulletin_board'
 });
 
 
-module.exports = client;
+module.exports = pool;
