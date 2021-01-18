@@ -11,7 +11,7 @@ router.get('/', async function(request, response){
     var page = Math.max(1, parseInt(request.query.page));
     var limit = Math.max(1, parseInt(request.query.limit));
     page = !isNaN(page)?page:1;
-    limit = !isNaN(limit)?limit:1;
+    limit = !isNaN(limit)?limit:5;
 
     var skip = (page-1) * limit;
     var [row, field] = await pool.query('SELECT COUNT(*) AS count FROM board');

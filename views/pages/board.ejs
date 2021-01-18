@@ -25,20 +25,11 @@
             width: 50px;
         }
 
-        .bottom_button{
-            margin: 15px 0;
-        }
-        .bottom_button::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
         .creat_post_btn{
             background-color: #f44336;
             color: white;
             padding: 7px 10px;
             font-size: 12px;
-            float: right;
         }
         .creat_post_btn:link, .creat_post_btn:visited{
             color: white;
@@ -53,6 +44,7 @@
         <div class="container mb-3">
             <h2 class="mb-3">Board</h2>
 
+            <!-- 게시판 목록 -->
             <table class="table table-hover table-sm board-bottom">
                 <thead class="thead-light">
                     <tr>
@@ -84,12 +76,9 @@
                 
             </table>
 
+            <!-- 글쓰기 버튼, 페이지 버튼 -->
             <div class="row mb-3">
-                <div class="col-2">
-                    <% if(isAuthenticated){ %>
-                        <a href="/board/creating_post" class="creat_post_btn" role="button">글 작성</a>
-                    <% }; %>
-                </div>
+                <div class="col-2"></div>
 
                 <nav class="col-8">
                     <% var offset = 2; var previousBtnEnabled = currentPage > 1; var nextBtnEnabled = maxPage > currentPage; %>
@@ -114,7 +103,28 @@
                         </li>
                     </ul>
                 </nav>
+
+                <div class="col-2">
+                    <% if(isAuthenticated){ %>
+                        <a href="/board/creating_post" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>
+                    <% }; %>
+                </div>
             </div>
+
+            <!-- 표시될 게시물 수 설정-->
+            <form method="GET">
+                <!-- method를 get으로 하면 form 항목들이 query string으로 전달-->
+                <div class="form-row">
+                    <div class="form-grop col-3">
+                        <label>Show</label>
+                        <select name="limit" class="custom-select" onchange="this.parentElement.parentElement.parentElement.submit()">
+                            <option value="5" <%= limit==5?'selected':'' %>>5 posts </option>
+                            <option value="10" <%= limit==10?'selected':'' %>>10 posts </option>
+                            <option value="20" <%= limit==20?'selected':'' %>>20 posts </option>
+                        </select>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
