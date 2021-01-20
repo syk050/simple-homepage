@@ -34,7 +34,7 @@
                     <form action="/board/delete/<%= data.num %>" method="GET">
                         <% if(isAuthenticated && currentUser.numid == data.author){ %>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="/board/edit/<%= data.num %><%= getQueryString() %>" class="btn btn-secondary" role="button">
+                                <a href="/board/edit/<%= data.num %><%= getPostQueryString() %>" class="btn btn-secondary" role="button">
                                     <i class="fa fa-pencil-square-o"></i>
                                     수정
                                 </a>
@@ -52,7 +52,7 @@
             </div>
 
             <div class="card-footer bg-transparent d-flex justify-content-end">
-                <a href="/board<%= getQueryString() %>" class="board_btn ">
+                <a href="/board<%= getPostQueryString() %>" class="board_btn ">
                     <i class="fa fa-bars"></i>
                     <span>목록</span>
                 </a>
