@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var pool = require('../models/DBConnection');
+var pool = require('../models/DBPool');
+var client = require('../models/DBConnection');
 const util = require('../util');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
@@ -47,7 +48,7 @@ router.post('/creating_post', util.isLoggedin, function(request, response){
     console.log('creating_post: ' + request.user.id);
 
     var user= {};
-    pool.query('SELECT numid, name FROM users WHERE id = ?', [request.user.id], 
+    client.query('SELECT numid, name FROM users WHERE id = ?', [request.user.id], 
     function(err, result){
         if (err){
           console.log('err: ' + err);
@@ -57,7 +58,7 @@ router.post('/creating_post', util.isLoggedin, function(request, response){
           user['numid'] = result[0].numid;
 
           var body = request.body;
-          pool.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
+          client.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
               user.name, body.title, body.content, user.numid
           ], function(err){
               if(err){
@@ -74,7 +75,7 @@ router.post('/creating_post', util.isLoggedin, function(request, response){
 router.get('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('edit id In : ' + request.params.id);
   
-    pool.query('SELECT * FROM board WHERE num = ?', [
+    client.query('SELECT * FROM board WHERE num = ?', [
       request.params.id
     ], function(err, result){
       response.render('pages/edit_post', {data: result[0]});
@@ -87,7 +88,7 @@ router.post('/edit/:id', util.isLoggedin, checkPermission, function(request, res
     console.log('update id: ' + request.params.id)
   
     var body = request.body
-    pool.query('UPDATE board SET title=?, content=? WHERE num=?', [
+    client.query('UPDATE board SET title=?, content=? WHERE num=?', [
       body.title, body.content, request.params.id
     ], function(err, result){
       response.redirect('/board/' + request.params.id + response.locals.getPostQueryString());
@@ -98,7 +99,7 @@ router.post('/edit/:id', util.isLoggedin, checkPermission, function(request, res
 router.get('/delete/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('delete id: ' + request.params.id)
 
-    pool.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
+    client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
       response.redirect('/board' + response.locals.getPostQueryString());
    });
 });
@@ -108,7 +109,7 @@ router.get('/__test__', function(request, response){
 
   var i = 0;
   for(i=0; i<10; i++){
-    pool.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
+    client.query('INSERT INTO board (name, title, content, author) VALUES (?, ?, ?, ?)',[
       'test', 'Test Post' + i, 'Test Post' + i, 1
     ]);
   }
@@ -117,30 +118,35 @@ router.get('/__test__', function(request, response){
 });
 
 // 게시글 선택
-router.get('/:id', async function(request, response){
+router.get('/:id', function(request, response){
     console.log('board id In : ' + request.params.id);  
 
     var rc = 0
-    var [rows, fields] = await pool.query('SELECT readcount as rc FROM board WHERE num = ?', [
+    client.query('SELECT readcount as rc FROM board WHERE num = ?', [
       request.params.id
-    ]);
-    console.log('readcount: ' + JSON.stringify(rows[0].rc));
-    rc = readcount[0].rc
-    if(rc < 10){
-      rc = readcount[0].rc + 1
-    }
+    ], function(err, result){
+      if(err) console.log(err);
+      else{
+        console.log(result);
+        rc = result[0].rc
+        if(rc < 10) rc = rc + 1
 
-    await pool.query('UPDATE board SET readcount=? WHERE num=?', [
-      rc, request.params.id
-    ]);
+        client.query('UPDATE board SET readcount=? WHERE num=?', [
+          rc, request.params.id
+        ]);
+      }
+    });
 
-    var [rows, fields] = await pool.query('SELECT * FROM board WHERE num = ?', [
+    client.query('SELECT * FROM board WHERE num = ?', [
       request.params.id
-    ]);
-    console.log('board: ' + JSON.stringify(rows[0]));
-    var board = rows[0]
+    ], function(err, result){
+      if(err) console.log(err);
+      else{
+        console.log(result);
 
-    response.render('pages/post', {data: board});
+        response.render('pages/post', {data: result[0]});
+      }
+    });
 });
 
 module.exports = router;
