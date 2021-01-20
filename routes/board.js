@@ -84,7 +84,7 @@ router.get('/edit/:id', util.isLoggedin, checkPermission, function(request, resp
 });
   
 // 게시글 수정 완료
-router.post('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
+router.put('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('update id: ' + request.params.id)
   
     var body = request.body
@@ -156,11 +156,10 @@ function checkPermission(request, response, next){
   // 게시판 숫자
   // console.log('boderNum: ' + JSON.stringify(request.params.id));
   // console.log('checkPermission: ' + JSON.stringify(request.user.numid));
+  console.log('checkPermission');
 
-  pool.query('SELECT author FROM board WHERE num = ?', [request.params.id
-  ], function(err, rows, fields){
-    console.log(rows);
-    console.log(fields);
+  client.query('SELECT author FROM board WHERE num = ?', [request.params.id
+  ], function(err, board){
     if(err) return JSON.stringify(err);
     if(board[0].author != request.user.numid) return util.noPermission(request, response);
 

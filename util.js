@@ -5,8 +5,10 @@ util.isLoggedin = function(request, response, next){
     console.log('isLoggedin: ');
 
     if(request.isAuthenticated()){
+        console.log('다음');
         next();
     }else{
+        console.log('로그인x');
         request.flash('errors', {login: '로그인을 먼저 하세요.'});
         response.redirect('/user/login');
     }
