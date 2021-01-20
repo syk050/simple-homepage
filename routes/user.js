@@ -9,14 +9,6 @@ const util = require('../util');
 router.get('/', function (request, response) {
     console.log('user page in');
 
-    // client.query('SELECT id, name FROM users', function(err, result){
-    //     if (err){
-    //         console.log(err);
-    //         response.redirect('/');
-    //     }else{
-    //         response.render('account/users', {data: result});
-    //     }
-    // })
     response.redirect('/');
 });
 

@@ -8,6 +8,8 @@ var session = require('express-session');
 var passport = require('./config/passport');
 var methodOverride = require('method-override');
 
+var util = require('./util');
+
 
 // 서버 생성
 var app = express();
@@ -65,7 +67,8 @@ server.listen(52273, function () {
 
 // Routes
 app.use('/', require('./routes/home'));
-app.use('/board', require('./routes/board'));
+// request되기 전에 배치하여 모든 post routes에서 util.getPostQueryString 사용하도록
+app.use('/board', util.getPostQueryString, require('./routes/board'));
 app.use('/user', require('./routes/user'));
 
 

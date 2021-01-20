@@ -25,7 +25,7 @@
                 </ol>
             </nav>
 
-            <form method="POST">
+            <form action="/board<%= getPostQueryString() %>" method="POST">
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" name="title" maxlength="50" autocomplete="off" class="form-control" required>
@@ -38,7 +38,7 @@
           
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <a class="btn btn-danger" href="/board">Back</a>
+                    <a class="btn btn-danger" href="/board<%= getPostQueryString() %>">Back</a>
                 </div>
             </form>
 

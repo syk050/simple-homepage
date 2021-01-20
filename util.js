@@ -21,4 +21,23 @@ util.noPermission = function(request, response){
     response.redirect('/user/login');
 }
 
+// res.locals에 getPostQueryString함수를 추가
+util.getPostQueryString = function(request, response, next){
+    response.locals.getPostQueryString = function(isAppended=false, overwrites={}){
+        var queryString ='';
+        var queryArray = [];
+        var page = overwirtes.page?overwrites.page:(request.query.page?request.query.page:'');
+        var limit = overwirtes.limit?overwrites.limit:(request.query.limit?request.query.limit:'');
+        // overwirtes에 limit가 있으면 그대로 사용하고 없으면 request.query에서 limit를 가져와 사용
+
+        if(page) queryArray.push('page=' + page);
+        if(limit) queryArray.push('limit=' + limit);
+
+        if(queryArray.length > 0) queryString = (isAppended?'&':'?') + queryArray.join('&');
+
+        return queryString;
+    }
+    next();
+}
+
 module.exports = util;

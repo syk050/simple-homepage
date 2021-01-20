@@ -60,7 +60,7 @@
                     <% board.forEach(function (item, index){ %>
                         <tr>
                             <td scope="row" class="wr_num"><%= item.num %></td>
-                            <td class="wr_title"><a href="/board/<%= item.num %>"><%= item.title %></a></td>
+                            <td class="wr_title"><a href="/board/<%= item.num %><%= getPostQueryString() %>"><%= item.title %></a></td>
                             <td class="wr_name"><%= item.name %></td>
                             <td class="wr_wd"><%= item.wd %></td>
                             <td class="wr_rc">
@@ -81,16 +81,20 @@
                 <div class="col-2"></div>
 
                 <nav class="col-8">
-                    <% var offset = 2; var previousBtnEnabled = currentPage > 1; var nextBtnEnabled = maxPage > currentPage; %>
+                    <% 
+                        var offset = 2; 
+                        var previousBtnEnabled = currentPage > 1; 
+                        var nextBtnEnabled = maxPage > currentPage; 
+                    %>
 
                     <ul class="pagination pagination-sm justify-content-center align-item-center h-100 mb-0">
                         <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
-                            <a class="page-link" href="/board?page=<%= currentPage-1 %>&limit=<%= limit %>" <%= previousBtnEnabled?'':'tabindex=-1' %>> &#60;&#60; </a>
+                            <a class="page-link" href="/board<%= getPostQueryString(false, {page: currentPage-1}) %>" <%= previousBtnEnabled?'':'tabindex=-1' %>> &#60;&#60; </a>
                         </li>
                         <% for(i=1; i<=maxPage; i++){ %>
                             <% if(i==1 || i==maxPage || (i>=currentPage-offset && i<=currentPage+offset)){ %>
                                 <li class="page-item <%= currentPage==i?'active':'' %>">
-                                    <a class="page-link" href="/board?page=<%= i %>&limit=<%= limit %>"> <%= i %> </a>
+                                    <a class="page-link" href="/board<%= getPostQueryString(false, {page: i}) %>"> <%= i %> </a>
                                 </li>
                             <% }else if(i==2 || i==maxPage-1){ %>
                                 <li>
@@ -99,14 +103,14 @@
                             <% } %>
                         <% } %>
                         <li class="page-item <%= nextBtnEnabled?'':'disabled' %>">
-                            <a class="page-link" href="/board?page=<%= currentPage+1 %>&limit=<%= limit %>" <%= nextBtnEnabled?'':'tabindex=-1' %>> &#62;&#62; </a>
+                            <a class="page-link" href="/board<%= getPostQueryString(false, {page: currentPage+1}) %>" <%= nextBtnEnabled?'':'tabindex=-1' %>> &#62;&#62; </a>
                         </li>
                     </ul>
                 </nav>
 
                 <div class="col-2">
                     <% if(isAuthenticated){ %>
-                        <a href="/board/creating_post" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>
+                        <a href="/board/creating_post<% getPostQueryString() %>" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>
                     <% }; %>
                 </div>
             </div>

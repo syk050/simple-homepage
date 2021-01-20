@@ -26,7 +26,7 @@
                 </ol>
             </nav>
 
-            <form method="POST">
+            <form action="/board/edit/<%= data.num %>?_method=put<%= getPostQueryString(true) %>" method="POST">
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" name="title" maxlength="50" autocomplete="off" value="<%= data.title %>" class="form-control" required>
@@ -40,7 +40,7 @@
                   <div class="d-flex justify-content-end ">
                     <div class="btn-group btn-group-sm" role="group">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a class="btn btn-danger" href="/board/<%= data._id %>">Back</a>
+                        <a class="btn btn-danger" href="/board/<%= data._id %><%= getPostQueryString() %>">Back</a>
                     </div>
                   </div>
             </form>

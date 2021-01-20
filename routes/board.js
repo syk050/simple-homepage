@@ -62,8 +62,9 @@ router.post('/creating_post', util.isLoggedin, function(request, response){
           ], function(err){
               if(err){
                   console.log(err)
-              }   
-              response.redirect('/board');
+              }
+              // 새글을 작성 완료하면 무조건 1페이지로 가게하기 위해서
+              response.redirect('/board' + response.locals.getPostQueryString(false, {page:1}));
           });
         }
     });
@@ -89,7 +90,7 @@ router.post('/edit/:id', util.isLoggedin, checkPermission, function(request, res
     client.query('UPDATE board SET title=?, content=? WHERE num=?', [
       body.title, body.content, request.params.id
     ], function(err, result){
-      response.redirect('/board/' + request.params.id);
+      response.redirect('/board/' + request.params.id + response.locals.getPostQueryString());
     });
 });
   
@@ -98,7 +99,7 @@ router.get('/delete/:id', util.isLoggedin, checkPermission, function(request, re
     console.log('delete id: ' + request.params.id)
 
     client.query('DELETE FROM board WHERE num=?', [request.params.id], function () {
-      response.redirect('/board');
+      response.redirect('/board' + response.locals.getPostQueryString());
    });
 });
 
