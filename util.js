@@ -32,8 +32,14 @@ util.getPostQueryString = function(request, response, next){
         var limit = overwrites.limit?overwrites.limit:(request.query.limit?request.query.limit:'');
         // overwrites에 limit가 있으면 그대로 사용하고 없으면 request.query에서 limit를 가져와 사용
 
+        var serchType = overwrites.serchType?overwrites.serchType:(request.query.serchType?request.query.serchType:'')
+        var serchText = overwrites.serchText?overwrites.serchText:(request.query.serchText?request.query.serchText:'')
+
+
         if(page) queryArray.push('page=' + page);
         if(limit) queryArray.push('limit=' + limit);
+        if(serchType) queryArray.push('serchType=' + serchType);
+        if(serchText) queryArray.push('serchText=' + serchText);
 
         if(queryArray.length > 0) queryString = (isAppended?'&':'?') + queryArray.join('&');
 

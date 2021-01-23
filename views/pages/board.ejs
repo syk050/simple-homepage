@@ -35,6 +35,13 @@
             color: white;
         }
 
+        .post-index-tool{
+            max-width: 450px;
+        }
+        .post-index-tool input[type='text']{
+            max-width: 130px;
+        }
+
     </style>
 </head>
 <body>
@@ -116,16 +123,31 @@
             </div>
 
             <!-- 표시될 게시물 수 설정-->
-            <form method="GET">
+            <form method="GET" class="post-index-tool">
                 <!-- method를 get으로 하면 form 항목들이 query string으로 전달-->
                 <div class="form-row">
-                    <div class="form-grop col-3">
+                    <div class="form-group col-3">
                         <label>Show</label>
                         <select name="limit" class="custom-select" onchange="this.parentElement.parentElement.parentElement.submit()">
                             <option value="5" <%= limit==5?'selected':'' %>>5 posts </option>
                             <option value="10" <%= limit==10?'selected':'' %>>10 posts </option>
                             <option value="20" <%= limit==20?'selected':'' %>>20 posts </option>
                         </select>
+                    </div>
+
+                    <div class="form-group col-9">
+                        <label>검색</label>
+                        <div class="input-group">
+                            <select name="searchType" class="custom-select">
+                                <option value="title,body" <%= searchType=='title,body'?'selected':'' %>>제목, 내용</option>
+                                <option value="title" <%= searchType=='title'?'selected':'' %>>제목</option>
+                                <option value="body" <%= searchType=='body'?'selected':'' %>>내용</option>
+                            </select>
+                            <input minlength="3" type="text" name="searchText" value="<%= searchText %>">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">검색</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

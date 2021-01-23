@@ -14,24 +14,26 @@ router.get('/', async function(request, response){
     page = !isNaN(page)?page:1;
     limit = !isNaN(limit)?limit:5;
 
+    var searchQuery = createSearchQuery(request.query);
+
     var skip = (page-1) * limit;
-    var [row, field] = await pool.query('SELECT COUNT(*) AS count FROM board');
+    var [row, field] = await pool.query('SELECT COUNT(*) AS count FROM board ' + searchQuery);
     var count = row[0].count;
     var maxPage = Math.ceil(count/limit);
-    // console.log('maxPage: ' + maxPage);
-    // console.log('limit: ' + limit);
-    // console.log('skip: ' + skip);
 
-    var [row, field] = await pool.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board order by num DESC LIMIT ? OFFSET ?', [
+    var [row, field] = await pool.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board ' + searchQuery + ' order by num DESC LIMIT ? OFFSET ?', [
       limit, skip
     ]);
+    
     var boards = row;
 
     response.render('pages/board', {
       board: boards,
       currentPage: page,
       maxPage: maxPage,
-      limit: limit
+      limit: limit,
+      searchType: request.query.searchType,
+      searchText: request.query.searchText
     });
 });
 
@@ -65,12 +67,12 @@ router.post('/creating_post', util.isLoggedin, function(request, response){
                   console.log(err)
               }
               // 새글을 작성 완료하면 무조건 1페이지로 가게하기 위해서
-              response.redirect('/board' + response.locals.getPostQueryString(false, {page:1}));
+              response.redirect('/board' + response.locals.getPostQueryString(false, {page:1, searchText: ''}));
           });
         }
     });
 });
-  
+
 // 게시글 수정
 router.get('/edit/:id', util.isLoggedin, checkPermission, function(request, response){
     console.log('edit id In : ' + request.params.id);
@@ -165,4 +167,29 @@ function checkPermission(request, response, next){
 
     next();
   });
+}
+
+// 조건문 쿼리 제작
+function createSearchQuery(queries){
+  var searchQuery = '';
+  if(queries.searchType && queries.searchText && queries.searchText.length >= 3){
+    var searchTypes = queries.searchType.toLowerCase().split(',');
+    var postQueries = [];
+
+    if(searchTypes.indexOf('title') >= 0){
+      postQueries.push('title LIKE "%' + queries.searchText + '%"');
+    }
+    if(searchTypes.indexOf('body') >= 0){
+      postQueries.push('content LIKE "%' + queries.searchText + '%"');
+    }
+    // console.log('postQueries: ' + postQueries);
+
+    if(postQueries.length > 0){
+      // 연산자 우선수위 때문에 각각 괄호로 묶음
+      searchQuery = ('WHERE ' + postQueries.pop()) + (postQueries?' or ' + postQueries.pop():'');
+    }
+    // console.log('searchQuery: '+ searchQuery);
+
+    return searchQuery;
+  }
 }
