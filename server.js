@@ -70,6 +70,7 @@ app.use('/', require('./routes/home'));
 // request되기 전에 배치하여 모든 post routes에서 util.getPostQueryString 사용하도록
 app.use('/board', util.getPostQueryString, require('./routes/board'));
 app.use('/user', require('./routes/user'));
+app.use('/commnet', util.getPostQueryString, require('./routes/comment'));
 
 
 // 통신

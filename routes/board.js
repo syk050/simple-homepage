@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var pool = require('../models/DBPool');
 var client = require('../models/DBConnection');
+var  mysql = require('mysql');
 const util = require('../util');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
@@ -123,6 +124,7 @@ router.get('/__test__', function(request, response){
 router.get('/:id', function(request, response){
     console.log('board id In : ' + request.params.id);  
 
+    // 조회수
     var rc = 0
     client.query('SELECT readcount as rc FROM board WHERE num = ?', [
       request.params.id
@@ -139,16 +141,28 @@ router.get('/:id', function(request, response){
       }
     });
 
-    client.query('SELECT * FROM board WHERE num = ?', [
-      request.params.id
-    ], function(err, result){
-      if(err) console.log(err);
-      else{
-        console.log(result);
+    var commnetForm = request.flash('commentForm')[0] || {id: null, form: {}};
+    var commentError = request.flash('commentError')[0] || {id: null, parentComment: null, errors: {}};
 
-        response.render('pages/post', {data: result[0]});
-      }
-    });
+    var boardSql = 'SELECT * FROM board WHERE num = ?;';
+    var boardSqlm = mysql.format(boardSql, request.params.id);
+
+    var commentSql = 'SELECT * FROM comment WHERE post = ? order by created DESC;';
+    var commentSqlm = mysql.format(commentSql, request.params.id);
+
+    try{
+      client.query(boardSqlm + commentSqlm, function(err, result){
+        if(err) {
+          console.log(err);
+          response.redirect('/board');
+        }
+        
+        response.render('pages/post', {data: result[0], comment: result[1], commentForm: commnetForm, commentError: commentError});
+      });
+    }catch(error){
+      console.log(error);
+      response.json(error);
+    }
 });
 
 module.exports = router;
