@@ -87,6 +87,7 @@
             <div class="row mb-3">
                 <div class="col-2"></div>
 
+                <!-- 페이지 버튼 -->
                 <nav class="col-8">
                     <% 
                         var offset = 2; 
@@ -115,6 +116,7 @@
                     </ul>
                 </nav>
 
+                <!-- 글쓰기 버튼 -->
                 <div class="col-2">
                     <% if(isAuthenticated){ %>
                         <a href="/board/creating_post<% getPostQueryString() %>" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>

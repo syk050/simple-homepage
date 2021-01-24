@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var pool = require('../models/DBPool');
 var client = require('../models/DBConnection');
-var  mysql = require('mysql');
 const util = require('../util');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
@@ -131,7 +130,6 @@ router.get('/:id', function(request, response){
     ], function(err, result){
       if(err) console.log(err);
       else{
-        console.log(result);
         rc = result[0].rc
         if(rc < 10) rc = rc + 1
 
@@ -141,23 +139,30 @@ router.get('/:id', function(request, response){
       }
     });
 
-    var commnetForm = request.flash('commentForm')[0] || {id: null, form: {}};
+    var commnetForm = request.flash('commentForm')[0] || {id: null, form: {text: ''}};
     var commentError = request.flash('commentError')[0] || {id: null, parentComment: null, errors: {}};
 
-    var boardSql = 'SELECT * FROM board WHERE num = ?;';
-    var boardSqlm = mysql.format(boardSql, request.params.id);
+    var boardSql = 'SELECT num, name, title, content, author FROM board WHERE num = ?;';
+    var boardSqlm = client.format(boardSql, request.params.id);
 
     var commentSql = 'SELECT * FROM comment WHERE post = ? order by created DESC;';
-    var commentSqlm = mysql.format(commentSql, request.params.id);
+    var commentSqlm = client.format(commentSql, request.params.id);
 
     try{
-      client.query(boardSqlm + commentSqlm, function(err, result){
+      client.query(boardSqlm + commentSqlm, function(err, result, fields){
+        console.log('result1: ' + JSON.stringify(result[0][0]));
+        console.log('result2: ' + JSON.stringify(result[1]));
+
         if(err) {
           console.log(err);
           response.redirect('/board');
         }
         
-        response.render('pages/post', {data: result[0], comment: result[1], commentForm: commnetForm, commentError: commentError});
+        response.render('pages/post', {
+          data: result[0][0], 
+          comment: result[1],
+          commentForm: commnetForm, 
+          commentError: commentError});
       });
     }catch(error){
       console.log(error);

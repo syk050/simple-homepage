@@ -5,6 +5,7 @@ var client = mysql.createConnection({
     user: 'root',
     password: '1234',
     database: 'bulletin_board',
+    multipleStatements: true
 });
 
 

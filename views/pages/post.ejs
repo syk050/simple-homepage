@@ -51,54 +51,56 @@
               <%= data.content %>
             </div>
 
-            <div class="card-footer bg-transparent d-flex justify-content-end">
-                <a href="/board<%= getPostQueryString() %>" class="board_btn ">
-                    <i class="fa fa-bars"></i>
-                    <span>목록</span>
-                </a>
-            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-end">
+                    <a href="/board<%= getPostQueryString() %>" class="board_btn ">
+                        <i class="fa fa-bars"></i>
+                        <span>목록</span>
+                    </a>
+                </div>
+                
+                <h4 class="mt-3">댓글</h4>
 
-            <h4 class="mt-3">댓글</h4>
-
-            <% if(comment.length){ %>
-                <div class="mt-3 border-bottom">
-                    <% comment.forEach(function(item){ %>
-                        <div class="border-top pt-1 pb-1">
-                            <div class="row">
-                                <div class="col-3 col-mb-2 col-lg-1 pl-4"><%= item.username %></div>
-                                <div class="col-9 col-mb-10 col-lg-11">
-                                    <div class="comment-show">
-                                        <div class="comment-text mb-3"><%= item.text %></div>
-                                        <small class="d-block">
-                                            (Created: <span data-date-time="<%= item.create %>"></span>)
-                                        </small>
+                <% if(comment.length){ %>
+                    <div class="mt-3 border-bottom">
+                        <% comment.forEach(function(item){ %>
+                            <div class="border-top pt-1 pb-1">
+                                <div class="row">
+                                    <div class="col-3 col-mb-2 col-lg-1 pl-4"><%= item.username %></div>
+                                    <div class="col-9 col-mb-10 col-lg-11">
+                                        <div class="comment-show">
+                                            <div class="comment-text mb-1"><%= item.text %></div>
+                                            <small class="d-block">(Created: <span data-date-time="<%= item.created %>"></span>)</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    <% }) %>
-                </div>
-            <% } %>
+                        <% }) %>
+                    </div>
+                <% } %>
 
-            <div class="mt-3">
-                <form action="/comment?postId=<%= post.id %><%= getPostQueryString(true) %>" method="post">
-                    <filedset <%= !isAuthenticated?'disabled':'' %>>
-                        <div class="row">
-                            <div class="col-8">
-                                <textarea name="text" rows="2" class="form-control <%= (commentError.error.text)?'is-invalid':'' %>">
-                                    <%= commentForm.form.text %>
-                                </textarea>
+                <div class="mt-3">
+                    <form action="/comment?boardId=<%= data.num %><%= getPostQueryString(true) %>" method="post">
+                        <fieldset <%= !isAuthenticated?'disabled':'' %>>
+                            <div class="row">
+                                <div class="col-8">
+                                    <textarea name="text" rows="2" class="form-control <%= (commentError.error)?'is-invalid':'' %>"><%= commentForm.form.text %></textarea>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-primary h-100 mr-2">댓글 작성</button>
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <button type="submit" class="btn btn-primary h-100 mr-2">댓글 작성</button>
-                            </div>
-                        </div>
-                        <% if(commentError.error.text){ %>
-                            <span class="invalid-feedback d-blok"><%= commentError.errors.text.message %></span>
-                        <% } %>
-                    </filedset>
-                </form>
+                            <% if(commentError.error){ %>
+                                <span class="invalid-feedback d-blok"><%= commentError.errors %></span>
+                            <% } %>
+                        </fieldset>
+                    </form>
+                </div>
             </div>
+
+
+            
+
         </div>
     </div>
 </body>

@@ -18,7 +18,7 @@ var server = require('http').createServer(app);
 
 io.attach(server);
 
-// app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public'));
 
 // Express v4.16.0을 기준으로 express도 빌트인 body-parser를 넣었
 // app.use(express.json()); // json으로 받아들인 정보를 분석함
@@ -70,7 +70,7 @@ app.use('/', require('./routes/home'));
 // request되기 전에 배치하여 모든 post routes에서 util.getPostQueryString 사용하도록
 app.use('/board', util.getPostQueryString, require('./routes/board'));
 app.use('/user', require('./routes/user'));
-app.use('/commnet', util.getPostQueryString, require('./routes/comment'));
+app.use('/comment', util.getPostQueryString, require('./routes/comment'));
 
 
 // 통신
