@@ -1,0 +1,27 @@
+<% /*
+    actionUrl
+    comment
+    commentForm
+    commentError
+*/%>
+
+<form action="<%= actionUrl %><%= getPostQueryString(true) %>" method="post">
+    <fieldset <%= !isAuthenticated?'disabled':'' %>>
+        <div class="row">
+            <div class="col-8">
+                <textarea name="text" rows="2" class="form-control <%= (commentError.error)?'is-invalid':'' %>"><%= (commentForm.id == comment.id)?commentForm.form.text:comment.text %></textarea>
+            </div>
+            <div class="col-4">
+                <% if(comment.id){ %>
+                    <button type="submit" class=" btn btn-primary h-100 mr-2 pl-4 pr-4">수정</button>
+                    <a href="javascript:voud(0)" onclick="$('#comment-<%= comment.id %>').removeClass('comment-edit-endabled')">취소</a>
+                <% }else{ %>
+                        <button type="submit" class="btn btn-primary h-100 mr-2">댓글 작성</button>
+                <% } %>
+            </div>
+        </div>
+        <% if(commentError.error){ %>
+            <span class="invalid-feedback d-blok"><%= commentError.errors %></span>
+        <% } %>
+    </fieldset>
+</form>
