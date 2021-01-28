@@ -3,6 +3,7 @@ var router = express.Router();
 var pool = require('../models/DBPool');
 var client = require('../models/DBConnection');
 const util = require('../util');
+const { json } = require('body-parser');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
 // await는 해당 Promise가 완료될 때까지 다음 코드로 진행하지 않고 기다림
@@ -139,7 +140,7 @@ router.get('/:id', function(request, response){
       }
     });
 
-    var commnetForm = request.flash('commentForm')[0] || {id: null, form: {text: ''}};
+    var commentForm = request.flash('commentForm')[0] || {id: null, form: {}};
     var commentError = request.flash('commentError')[0] || {id: null, parentComment: null, errors: {}};
 
     var boardSql = 'SELECT num, name, title, content, author FROM board WHERE num = ?;';
@@ -152,16 +153,17 @@ router.get('/:id', function(request, response){
       client.query(boardSqlm + commentSqlm, function(err, result, fields){
         console.log('result1: ' + JSON.stringify(result[0][0]));
         console.log('result2: ' + JSON.stringify(result[1]));
-
         if(err) {
           console.log(err);
           response.redirect('/board');
         }
+        var commentTrees = util.convertToTrees(result[1], 'id', 'parentComment', 'childComments');
+        console.log('commentTrees: ' + JSON.stringify(commentTrees));
         
         response.render('pages/post', {
           data: result[0][0], 
-          comment: result[1],
-          commentForm: commnetForm, 
+          commentTrees: commentTrees,
+          commentForm: commentForm, 
           commentError: commentError});
       });
     }catch(error){

@@ -3,18 +3,25 @@
     comment
     commentForm
     commentError
+    parentComment
 */%>
 
 <form action="<%= actionUrl %><%= getPostQueryString(true) %>" method="post">
     <fieldset <%= !isAuthenticated?'disabled':'' %>>
+        <% if(parentComment){ %>
+            <input type="hidden" name="parentComment" value="<%= parentComment %>">
+        <% } %>
         <div class="row">
             <div class="col-8">
-                <textarea name="text" rows="2" class="form-control <%= (commentError.error)?'is-invalid':'' %>"><%= (commentForm.id == comment.id)?commentForm.form.text:comment.text %></textarea>
+                <textarea name="text" rows="2" class="form-control <%= (commentError.id == comment.id && commentError.parentComment == parentComment && commentError.error)?'is-invalid':'' %>"><%= (commentForm.id == comment.id)?commentForm.form.text:comment.text %></textarea>
             </div>
             <div class="col-4">
                 <% if(comment.id){ %>
                     <button type="submit" class=" btn btn-primary h-100 mr-2 pl-4 pr-4">수정</button>
-                    <a href="javascript:voud(0)" onclick="$('#comment-<%= comment.id %>').removeClass('comment-edit-endabled')">취소</a>
+                    <a href="javascript:voud(0)" onclick="$('#comment-<%= comment.id %>').removeClass('comment-edit-enabled')">취소</a>
+                <% }else if(parentComment){ %>
+                    <button type="submit" class="btn btn-primary h-100 mr-2">대댓글 작성</button>
+                    <a href="javascript:voud(0)" onclick="$('#comment-<%= parentComment %>').removeClass('comment-reply-enabled')">취소</a>
                 <% }else{ %>
                         <button type="submit" class="btn btn-primary h-100 mr-2">댓글 작성</button>
                 <% } %>

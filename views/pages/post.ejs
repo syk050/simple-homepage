@@ -62,50 +62,16 @@
                 
                 <h4 class="mt-3">댓글</h4>
 
-                <% if(comment.length){ %>
+                <!-- 기존 댓글 -->
+                <% if(commentTrees.length){ %>
                     <div class="mt-3 border-bottom">
-                        <% comment.forEach(function(item){ %>
-                            <div class="border-top pt-1 pb-1">
-                                <% if(item.isDeleted) { %>
-                                    <div class="text-muted p-2">(삭제된 댓글)</div>
-                                <% }else{ %>
-                                <div class="row">
-                                    <div class="col-3 col-mb-2 col-lg-1 pl-4"><%= item.username %></div>
-                                    <div id="comment-<%= item.id %>" class="col-9 col-md-10 col-lg-11 <%= (commentError.id == comment.id)?'commnet-edit-enabled':'' %>">
-                                        <!-- 댓글 -->
-                                        <div class="comment-show">
-                                            <div class="comment-text mb-1"><%= item.text %></div>
-                                            <small class="d-block">
-                                                (Created: <span data-date-time="<%= item.created %>"></span>
-                                                <% if(item.update){ %>
-                                                    | Update: <span data-date-time="<%= item.update %>"></span>
-                                                <% } %>
-                                                )
-                                            </small>
-                                            <% if(isAuthenticated && item.author && currentUser.numid == item.author){ %>
-                                                <small class="d-block">
-                                                    <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('commnet-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= item.id %>').addClass('comment-edit-enabled')">수정</a>
-                                                    |
-                                                    <form action="/comment/<%= item.id %>?boardId=<%= data.num %>&_method=delete<%= getPostQueryString(true) %>" method="POST" class="d-inline">
-                                                        <a herf="javascript:void(0)" onclick="confirm('정말 삭제하시겠습니까?')?this.parentElement.submit():null;">삭제</a>
-                                                    </form>
-                                                </small>
-                                            <% } %>
-                                        </div>
-
-                                        <!-- 댓글 폼 -->
-                                        <div class="comment-edit">
-                                            <%- include('./partials/comment-form', {
-                                                actionUrl: '/comment/' + item.id + '?boardId=' + data.num + '&_method=put',
-                                                comment: item,
-                                                commentForm: commentForm,
-                                                commentError: commentError,
-                                            }); %>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% } %>
-                            </div>
+                        <% commentTrees.forEach(function(comment){ %>
+                            <%- include('partials/comment-show', {
+                                post: data,
+                                comment: comment,
+                                commentForm: commentForm,
+                                commentError: commentError
+                            }); %>
                         <% }); %>
                     </div>
                 <% } %>
@@ -117,6 +83,7 @@
                         comment: {},
                         commentForm: commentForm,
                         commentError: commentError,
+                        parentComment: null
                       }); %>
                 </div>
             </div>

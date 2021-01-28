@@ -1,0 +1,72 @@
+<%/*
+    post
+    comment
+    commentForm
+    commentError
+*/%>
+
+<div class="border-top">
+    <% if(comment.isDeleted){ %>
+        <div class="test-muted p-2">(삭제된 댓글)</div>
+    <% }else{ %>
+        <div class="row pt-1 pb-1">
+            <div class="col-3 col-mb-2 col-lg-1 pl-4"><%= comment.username %></div>
+            <div id="comment-<%= comment.id %>" class="col-9 col-md-10 col-lg-11 <%= (commentError.id == comment.id)?'comment-edit-enabled':'' %> <% (commentError.parentComment == comment.id)?'comment-reply-enabled':'' %>">
+                <div class="comment-show">
+                    <div class="comment-text mb-3"><%= comment.text %></div>
+                    <small class="d-block">
+                        (Created: <span data-date-time="<%= comment.created %>"></span>
+                        <% if(comment.update){ %>
+                            | Update: <span data-date-time="<%= comment.update %>"></span>
+                        <% } %>
+                        )
+                    </small>
+                    <% if(isAuthenticated){ %>
+                        <small class="d-block">
+                            <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment.id %>').addClass('comment-reply-enabled')">대댓글</a>
+                            <% if(comment.author && currentUser.numid == comment.author){ %>
+                                |
+                                <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment.id %>').addClass('comment-edit-enabled')">수정</a>
+                                |
+                                <form action="/comment/<%= comment.id %>?boardId=<%= post.num %>&_method=delete<%= getPostQueryString(true) %>" method="POST" class="d-inline">
+                                    <a href="javascript:void(0)" onclick="confirm('정말 삭제하시겠습니까?')?this.parentElement.submit():null;">삭제</a>
+                                </form>
+                            <% } %>
+                        </small>
+                    <% } %>
+                </div>
+                <div class="comment-edit">
+                    <%- include('comment-form', {
+                        actionUrl: '/comment/' + comment.id + '?boardId=' + post.num + '&_method=put',
+                        comment: comment,
+                        commentForm: commentForm,
+                        commentError: commentError,
+                        parentComment: null
+                    }); %>
+                </div>
+                <div class="comment-reply">
+                    <%- include('comment-form', {
+                        actionUrl: '/comment?boardId=' + post.num,
+                        comment: {},
+                        commentForm: commentForm,
+                        commentError: commentError,
+                        parentComment: comment.id
+                    }); %>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="ml-3">
+        <% if(comment.childComments){ %>
+            <% comment.childComments.forEach(function(childComment){ %>
+                <%- include('comment-show', {
+                    post: post,
+                    comment: childComment,
+                    commentForm: commentForm,
+                    commentError: commentError
+                }); %>
+            <% }); %>
+        <% } %>
+    </div>
+</div>
