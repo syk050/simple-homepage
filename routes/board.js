@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({data: 'uploadFiels/'});
+
 var pool = require('../models/DBPool');
 var client = require('../models/DBConnection');
 const util = require('../util');
-const { json } = require('body-parser');
 
 // await 키워드를 사용하기 위해 async 키워드를 function 키워드 앞에 붙임
 // await는 해당 Promise가 완료될 때까지 다음 코드로 진행하지 않고 기다림
@@ -25,7 +27,6 @@ router.get('/', async function(request, response){
     var [row, field] = await pool.query('SELECT num, title, name, DATE_FORMAT(writedate, "%y-%m-%d") AS wd, readcount, author FROM board ' + searchQuery + ' order by num DESC LIMIT ? OFFSET ?', [
       limit, skip
     ]);
-    
     var boards = row;
 
     response.render('pages/board', {
@@ -46,9 +47,12 @@ router.get('/creating_post', util.isLoggedin, function(request, response){
 });
   
 // 게시글 작성 완료
-router.post('/creating_post', util.isLoggedin, function(request, response){
-    console.log('creat_post');
+// upload.single(폼_Input_이름)는 파일 하나(single)를 form으로 부터 읽음
+router.post('/creating_post', util.isLoggedin, upload.single('attachment'), async function(request, response){
     console.log('creating_post: ' + request.user.id);
+
+    // var attachment = requset.file?await client.query
+    console.log(JSON.stringify(request.file));
 
     var user= {};
     client.query('SELECT numid, name FROM users WHERE id = ?', [request.user.id], 
@@ -161,7 +165,10 @@ router.get('/:id', function(request, response){
         console.log('commentTrees: ' + JSON.stringify(commentTrees));
         
         response.render('pages/post', {
-          data: result[0][0], 
+          data: {
+            post: result[0][0],
+            attachment: {}
+          }, 
           commentTrees: commentTrees,
           commentForm: commentForm, 
           commentError: commentError});

@@ -54,6 +54,10 @@ app.use(function(request, response, next){
 
   // 로그인된 user의 정보를 불러오는데 사용됩니다.
   response.locals.currentUser = request.user;
+  
+  // util의 모든 함수들을 ejs에서 사용가능
+  response.locals.util = util;
+
   console.log('currentUser: ' + JSON.stringify(request.user));
   next();
 });

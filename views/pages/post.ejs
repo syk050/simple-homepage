@@ -26,16 +26,16 @@
         <div class="card border-light mb-3">
             <!-- 본문 헤드 -->
             <div class="card-header bg-transparent">
-                <h1 class="text-info"><%= data.title %></h1>
+                <h1 class="text-info"><%= data.post.title %></h1>
 
                 <div class="d-flex justify-content-between">
-                    <span class="text-secondary">&nbsp;&nbsp;<%= data.name %></span>
+                    <span class="text-secondary">&nbsp;&nbsp;<%= data.post.name %></span>
 
                     
                     <form action="/board/delete/<%= data.num %>" method="GET">
-                        <% if(isAuthenticated && currentUser.numid == data.author){ %>
+                        <% if(isAuthenticated && currentUser.numid == data.post.author){ %>
                             <div class="btn-group btn-group-sm" role="group">
-                                <a href="/board/edit/<%= data.num %><%= getPostQueryString() %>" class="btn btn-secondary" role="button">
+                                <a href="/board/edit/<%= data.post.num %><%= getPostQueryString() %>" class="btn btn-secondary" role="button">
                                     <i class="fa fa-pencil-square-o"></i>
                                     수정
                                 </a>
@@ -48,7 +48,16 @@
 
             <!-- 본문 -->
             <div class="card-body">
-              <%= data.content %>
+                <div class="col-md-7 col-lg-8 col-xl-9 order-sm-2 oder-md-1">
+                    <% if(data.attachment){ %>
+                        <div class="ml-2">
+                            <small>첨부파일: <%= data.attachment.originalFileName %> (<%= util.bytesToSize(data.attachment.size) %>)</small>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="post-body p-2" >
+                    <%= data.post.content %>
+                </div>
             </div>
 
             <!-- 댓글 -->
