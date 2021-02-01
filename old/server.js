@@ -1,7 +1,6 @@
 var fs = require('fs');
 var ejs = require('ejs');
 var express = require('express');
-var socketio = require('socket.io');
 var flash = require('connect-flash');
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -12,11 +11,8 @@ var util = require('./util');
 
 
 // 서버 생성
+// express를 실행하여 app object를 초기화 합니다
 var app = express();
-var io = socketio();
-var server = require('http').createServer(app);
-
-io.attach(server);
 
 app.use(express.static(__dirname + '/public'));
 
@@ -64,9 +60,8 @@ app.use(function(request, response, next){
 
 
 // 서버 실행
-server.listen(52273, function () {
+app.listen(52273, function () {
   console.log('server running at http://127.0.0.1:52273');
-  // client.query('truncate customer')
 });
 
 // Routes
@@ -75,35 +70,3 @@ app.use('/', require('./routes/home'));
 app.use('/board', util.getPostQueryString, require('./routes/board'));
 app.use('/user', require('./routes/user'));
 app.use('/comment', util.getPostQueryString, require('./routes/comment'));
-
-
-// 통신
-io.sockets.on('connection', function(socket){
-  console.log('io connection');
-
-
-  // 관리자가 상품 구매 취소
-  socket.on('itemCancel', function(data){
-    console.log('itemCancel' + data);
-
-    client.query('UPDATE customer SET status = -1 WHERE id = ?', [
-      data
-    ], function(error, result){
-      if(error){
-        console.log(error);
-      }else{
-        client.query('SELECT * FROM customer WHERE id = ?', [
-          data
-        ], function(error, result){
-          io.sockets.emit('itemCancelSignal', result[0]);
-        });
-      }
-    });
-  });
-
-  socket.on('test', function(){
-    console.log('test');
-  });
-
-});
-
