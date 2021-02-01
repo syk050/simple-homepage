@@ -10,7 +10,7 @@
         <div class="test-muted p-2">(삭제된 댓글)</div>
     <% }else{ %>
         <div class="row pt-1 pb-1">
-            <div class="col-3 col-mb-2 col-lg-1 pl-4"><%= comment.username %></div>
+            <div class="col-3 col-mb-2 col-lg-1"><%= comment.username %></div>
             <div id="comment-<%= comment.id %>" class="col-9 col-md-10 col-lg-11 <%= (commentError.id == comment.id)?'comment-edit-enabled':'' %> <% (commentError.parentComment == comment.id)?'comment-reply-enabled':'' %>">
                 <div class="comment-show">
                     <div class="comment-text mb-3"><%= comment.text %></div>

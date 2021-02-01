@@ -4,34 +4,6 @@
     <meta charset="utf-8">
     <title>회원가입</title>
     <%- include('../partials/head'); %>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        window.onload = function(){
-            var socket = io.connect();
-
-            // // 구매 버튼을 클릭 시
-            // $(window).on('click', function(e){
-            //     // console.log(e.target);
-
-            //     if (e.target == $('.item_buy_button')[0]){
-            //         $('.modal').css('display', 'none');
-
-            //         socket.emit('itemBuy', $('.item_buy_button').attr('item_id'));
-            //     }
-            // });
-            
-            // 패스워드 불일치
-            socket.on('pw_not_matched', function(){
-                socket.emit('test');
-
-                console.log('password_not_matched');
-
-                $('#passwordCon').val("");
-            });
-
-        }
-    </script>
 </head>
 <body>
     <div class="content">

@@ -32,7 +32,7 @@
                     <span class="text-secondary">&nbsp;&nbsp;<%= data.post.name %></span>
 
                     
-                    <form action="/board/delete/<%= data.num %>" method="GET">
+                    <form action="/board/delete/<%= data.post.num %>" method="GET">
                         <% if(isAuthenticated && currentUser.numid == data.post.author){ %>
                             <div class="btn-group btn-group-sm" role="group">
                                 <a href="/board/edit/<%= data.post.num %><%= getPostQueryString() %>" class="btn btn-secondary" role="button">
@@ -76,7 +76,7 @@
                     <div class="mt-3 border-bottom">
                         <% commentTrees.forEach(function(comment){ %>
                             <%- include('partials/comment-show', {
-                                post: data,
+                                post: data.post,
                                 comment: comment,
                                 commentForm: commentForm,
                                 commentError: commentError
@@ -88,7 +88,7 @@
                 <!-- 댓글 작성 -->
                 <div class="mt-3">
                     <%- include('./partials/comment-form', {
-                        actionUrl:'/comment?boardId=' + data.num,
+                        actionUrl:'/comment?boardId=' + data.post.num,
                         comment: {},
                         commentForm: commentForm,
                         commentError: commentError,
