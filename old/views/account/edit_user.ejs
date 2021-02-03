@@ -23,7 +23,6 @@
                   <% if(errors.currentPw){ %>
                     <span class="invalid-feedback"><%= errors.currentPw %></span>
                   <% } %>
-                  <span class="<%= (errors.currentPw)?invalid-feedback:'' %>"><%= errors.currentPw %></span>
                 </div>
               </div>
       
@@ -42,7 +41,7 @@
                 <label for="name" class="col-sm-3 col-form-label">Name</label>
                 <div class="col-sm-9">
                   <input type="text" id="name" name="name" value="<%= data.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
-                  <span class="<%= (errors.name)?invalid-feedback:'' %>">닉네임은 4-12자여야 합니다.</span>
+                  <span class="<%= (errors.name)?'invalid-feedback':'' %>">닉네임은 4-12자여야 합니다.</span>
                 </div>
               </div>
       
@@ -51,7 +50,7 @@
                 <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
                 <div class="col-sm-9 col-sm-offset-3">
                   <input type="password" id="newPassword" name="newPassword" value="<%= (errors.pw)?'':inputData.newPassword %>" class="form-control <%= (errors.pw)?'is-invalid':'' %>" required>
-                  <span class="<%= (errors.pw)?invalid-feedback:'' %>">비밀번호는 숫자와 영문자가 포함되고 4-12자여야 합니다</span>
+                  <span class="<%= (errors.pw)?'invalid-feedback':'' %>">비밀번호는 숫자와 영문자가 포함되고 4-12자여야 합니다</span>
                 </div>
               </div>
       

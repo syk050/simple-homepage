@@ -19,7 +19,7 @@
                   <label for="id" class="col-sm-3 col-form-label">아이디</label>
                   <div class="col-sm-9">
                     <input type="text" id="id" name="id" value="<%= (errors.id)?'':inputData.id %>" class="form-control <%= (errors.id)?'is-invalid':'' %>" required>
-                    <span class="<%= (errors.id)?invalid-feedback:'' %>">ID는 4-12자여야 합니다.</span>
+                    <span class="<%= (errors.id)?'invalid-feedback':'' %>">ID는 4-12자여야 합니다.</span>
                   </div>
                 </div>
 
@@ -27,7 +27,7 @@
                   <label for="name" class="col-sm-3 col-form-label">닉네임</label>
                   <div class="col-sm-9">
                     <input type="text" id="name" name="name" value="<%= (errors.name)?'':inputData.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
-                    <span class="<%= (errors.name)?invalid-feedback:'' %>">닉네임은 4-12자여야 합니다.</span>
+                    <span class="<%= (errors.name)?'invalid-feedback':'' %>">닉네임은 4-12자여야 합니다.</span>
                   </div>
                 </div>
 
@@ -35,7 +35,7 @@
                   <label for="password" class="col-sm-3 col-form-label">비밀번호</label>
                   <div class="col-sm-9">
                     <input type="password" id="password" name="password" value="<%= (errors.pw)?'':inputData.password %>" class="form-control <%= (errors.pw)?'is-invalid':'' %>" required>
-                    <span class="<%= (errors.pw)?invalid-feedback:'' %>">비밀번호는 숫자와 영문자가 포함되고 4-12자여야 합니다</span>
+                    <span class="<%= (errors.pw)?'invalid-feedback':'' %>">비밀번호는 숫자와 영문자가 포함되고 4-12자여야 합니다</span>
                   </div>
                 </div>
 

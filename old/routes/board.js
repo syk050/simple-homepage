@@ -214,9 +214,9 @@ function createSearchQuery(queries){
 
     if(postQueries.length > 0){
       // 연산자 우선수위 때문에 각각 괄호로 묶음
-      searchQuery = ('WHERE ' + postQueries.pop()) + (postQueries?' or ' + postQueries.pop():'');
+      searchQuery = ('WHERE ' + postQueries.pop()) + (postQueries.length > 0?' or ' + postQueries.pop():'');
     }
-    // console.log('searchQuery: '+ searchQuery);
+    console.log('searchQuery: '+ searchQuery);
 
     return searchQuery;
   }

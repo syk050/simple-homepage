@@ -3,7 +3,7 @@ const express = require('express');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const passport = require('./config/passport');
+const passport = require('./lib/passport');
 const methodOverride = require('method-override');
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -35,26 +35,26 @@ app.use(session({
     store: new MySQLStore(database)
 }));
 app.use(flash());
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-// app.use(function(request, response, next){
-//   // req.isAuthenticated()는 passport에서 제공하는 함수
-//   // 현재 로그인이 되어있는지 아닌지를 true,false로 return
-//   response.locals.isAuthenticated = request.isAuthenticated();
+app.use(function(request, response, next){
+  // req.isAuthenticated()는 passport에서 제공하는 함수
+  // 현재 로그인이 되어있는지 아닌지를 true,false로 return
+  response.locals.isAuthenticated = request.isAuthenticated();
 
-//   // 로그인이 되면 session으로 부터 user를 deserialize하여 생성
-//   response.locals.currentUser = request.user;
+  // 로그인이 되면 session으로 부터 user를 deserialize하여 생성
+  response.locals.currentUser = request.user;
   
-//   // util의 모든 함수들을 ejs에서 사용가능
-//   response.locals.util = util;
+  // util의 모든 함수들을 ejs에서 사용가능
+  response.locals.util = util;
 
-//   console.log('currentUser: ' + JSON.stringify(request.user));
-//   next();
-// });
+  console.log('currentUser: ' + JSON.stringify(request.user));
+  next();
+});
 
 // Routes
-app.use('/', require('./routes/home.route'));
+app.use('/', util.getPostQueryString, require('./routes/home.route'));
 // request되기 전에 배치하여 모든 post routes에서 util.getPostQueryString 사용하도록
 // app.use('/board', util.getPostQueryString, require('./routes/board'));
 // app.use('/user', require('./routes/user'));
