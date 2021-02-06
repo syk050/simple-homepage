@@ -16,7 +16,7 @@ passport.use('local-login',
 
         const rows = await pool.query('SELECT * FROM users WHERE id = ?', id);
         
-        if (rows.length > 0){
+        if (rows[0].length > 0){
             const user = rows[0][0];
             const validPassword = await helpers.matchPassword(password, user.password);
 
