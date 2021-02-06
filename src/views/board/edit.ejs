@@ -21,26 +21,26 @@
                 <ol class="breadcrumb p-1 pl-2 pr-2">
                   <li class="breadcrumb-item"><a href="/">Home</a></li>
                   <li class="breadcrumb-item"><a href="/board">Board</a></li>
-                  <li class="breadcrumb-item"><a href="/board/<%= data.num %>"><%= data.title %></a></li>
+                  <li class="breadcrumb-item"><a href="/board/<%= board.num %>"><%= board.title %></a></li>
                   <li class="breadcrumb-item active" aria-current="page">Edit Post</li>
                 </ol>
             </nav>
 
-            <form action="/board/edit/<%= data.num %>?_method=put<%= getPostQueryString(true) %>" method="POST">
+            <form action="/board/edit/<%= board.num %>?_method=put<%= getPostQueryString(true) %>" method="POST">
                 <div class="form-group">
                     <label for="title">제목</label>
-                    <input type="text" name="title" maxlength="50" autocomplete="off" value="<%= data.title %>" class="form-control" required>
+                    <input type="text" name="title" maxlength="50" autocomplete="off" value="<%= board.title %>" class="form-control" required>
                   </div>
           
                   <div class="form-group">
                     <label for="body">내용</label>
-                    <textarea name="content" maxlength="1000" rows="5" class="form-control"><%= data.content %></textarea>
+                    <textarea name="content" maxlength="1000" rows="5" class="form-control"><%= board.content %></textarea>
                   </div>
           
                   <div class="d-flex justify-content-end ">
                     <div class="btn-group btn-group-sm" role="group">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                        <a class="btn btn-danger" href="/board/<%= data._id %><%= getPostQueryString() %>">Back</a>
+                        <a class="btn btn-danger" href="/board/<%= board.num %><%= getPostQueryString() %>">Back</a>
                     </div>
                   </div>
             </form>

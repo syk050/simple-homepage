@@ -24,7 +24,7 @@
                     <% if(isAuthenticated){ %>
                         <small class="d-block">
                             <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment.id %>').addClass('comment-reply-enabled')">대댓글</a>
-                            <% if(comment.author && currentUser.numid == comment.author){ %>
+                            <% if(comment.author && currentUser.id == comment.author){ %>
                                 |
                                 <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment.id %>').addClass('comment-edit-enabled')">수정</a>
                                 |

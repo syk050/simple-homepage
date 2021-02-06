@@ -1,28 +1,5 @@
 var util = {}
 
-// 사용자가 로그인이 되었는지 아닌지를 판단
-util.isLoggedin = function(request, response, next){
-    console.log('isLoggedin: ');
-
-    if(request.isAuthenticated()){
-        console.log('다음');
-        next();
-    }else{
-        console.log('로그인x');
-        request.flash('errors', {login: '로그인을 먼저 하세요.'});
-        response.redirect('/user/login');
-    }
-}
-
-// 어떠한 route에 접근권한이 없다고 판단된 경우에 호출
-util.noPermission = function(request, response){
-    console.log('noPermission: ');
-
-    request.flash('errors', {login: '권한이 없습니다.'});
-    request.logout();
-    response.redirect('/user/login');
-}
-
 // res.locals에 getPostQueryString함수를 추가
 util.getPostQueryString = function(request, response, next){
     response.locals.getPostQueryString = function(isAppended=false, overwrites={}){
@@ -89,6 +66,45 @@ util.bytesToSize = function(bytes){
     
     var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
+// 정규식 검사
+util.checkRegex = async function(data){
+    console.log('check_regex 호출');
+
+    var error = {}
+
+    // regex는 / /안에 작성합니다
+    // ^는 문자열의 시작 위치
+    // .는 어떠한 문자열
+    // {숫자1,숫자2}는 숫자1 이상, 숫자2 이하의 길이
+    // $는 문자열의 끝 위치
+    var idNameMatch = /^.{4,12}$/;
+    if (data.id && !idNameMatch.exec(data.id)){
+        error['id'] = 'ID는 4-12자여야 합니다.';
+    }
+    if (data.name && !idNameMatch.exec(data.name)){
+        error['name'] = '닉네임은 4-12자여야 합니다.';
+    }
+    
+    // 8-16자리 문자열 중에 숫자랑 영문자가 반드시 하나 이상 존재
+    var pwMatch = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/
+    if (data.password && !pwMatch.exec(data.password)){
+        error['pw'] = '비밀번호는 숫자와 영문자가 포함되고 4-12자여야 합니다';
+    }
+    if (data.password != data.passwordConfirm){
+        console.log('pw_not_matched');
+
+        error['pwComfirm'] = '비밀번호가 일치하지 않습니다.';
+    }
+
+    
+    // console.log(Object.keys(error).length);
+    if(Object.keys(error).length == 0){
+        return(null);
+    }else{
+        return(error);
+    }
 }
 
 module.exports = util;

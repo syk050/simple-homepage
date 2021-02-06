@@ -5,10 +5,10 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('./lib/passport');
 const methodOverride = require('method-override');
-const MySQLStore = require('express-mysql-session')(session);
+// const MySQLStore = require('express-mysql-session')(session);
 
-// const util = require('./util');
-const { database, port } = require('./config');
+const util = require('./lib/util');
+const { port } = require('./config');
 
 
 // express를 실행하여 app object를 초기화 합니다
@@ -31,8 +31,7 @@ app.use(methodOverride('_method'));
 app.use(session({
     secret:'MySecret', 
     resave:true, 
-    saveUninitialized:true,
-    store: new MySQLStore(database)
+    saveUninitialized:true
 }));
 app.use(flash());
 app.use(passport.initialize());
@@ -54,11 +53,12 @@ app.use(function(request, response, next){
 });
 
 // Routes
-app.use('/', util.getPostQueryString, require('./routes/home.route'));
+app.use(require('./routes/home.route'));
+app.use(require('./routes/account.route'));
 // request되기 전에 배치하여 모든 post routes에서 util.getPostQueryString 사용하도록
-// app.use('/board', util.getPostQueryString, require('./routes/board'));
-// app.use('/user', require('./routes/user'));
-// app.use('/comment', util.getPostQueryString, require('./routes/comment'));
+app.use('/board', util.getPostQueryString, require('./routes/board.route'));
+app.use('/user', require('./routes/user.route'));
+app.use('/comment', util.getPostQueryString, require('./routes/comment.route'));
 
 
 // Public

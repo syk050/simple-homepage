@@ -14,7 +14,7 @@
 
             <h3 class="mb-3">Edit User</h3>
       
-            <form action="/user/edit/<%= data.id %>?_method=put" method="post">
+            <form action="/user/edit/<%= user.id %>?_method=put" method="post">
       
               <div class="form-group row">
                 <label for="currentPassword" class="col-sm-3 col-form-label">Current Password*</label>
@@ -32,7 +32,7 @@
                 <div class="form-group row">
                     <label for="name" class="col-sm-3 col-form-label">Id</label>
                     <div class="col-sm-9">
-                      <input type="text" id="id" name="id" value="<%= data.id %>" class="form-control" required>
+                      <input type="text" id="id" name="id" value="<%= user.id %>" class="form-control" required>
                     </div>
                   </div>
               </fieldset>
@@ -40,7 +40,7 @@
               <div class="form-group row">
                 <label for="name" class="col-sm-3 col-form-label">Name</label>
                 <div class="col-sm-9">
-                  <input type="text" id="name" name="name" value="<%= data.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
+                  <input type="text" id="name" name="name" value="<%= user.name %>" class="form-control <%= (errors.name)?'is-invalid':'' %>" required>
                   <span class="<%= (errors.name)?'invalid-feedback':'' %>">닉네임은 4-12자여야 합니다.</span>
                 </div>
               </div>
@@ -55,9 +55,9 @@
               </div>
       
               <div class="form-group row">
-                <label for="passwordConfirmation" class="col-sm-3 col-form-label">Password Confirmation</label>
+                <label for="passwordConfirm" class="col-sm-3 col-form-label">Password Confirmation</label>
                 <div class="col-sm-9 col-sm-offset-3">
-                  <input type="password" id="passwordConfirmation" name="passwordConfirmation" value="<%= (errors.pw || errors.pwComfirm)?'':inputData.passwordConfirmation %>" class="form-control <%= (errors.pwComfirm)?'is-invalid':'' %>" required>
+                  <input type="password" id="passwordConfirm" name="passwordConfirm" value="<%= (errors.pw || errors.pwComfirm)?'':inputData.passwordConfirm %>" class="form-control <%= (errors.pwComfirm)?'is-invalid':'' %>" required>
                   <% if(errors.pwComfirm){ %>
                     <span class="invalid-feedback"><%= errors.pwComfirm %></span>
                   <% } %>
@@ -65,7 +65,7 @@
               </div>
       
               <div class="buttons">
-                <a class="btn btn-primary" href="/users/<%= data.id %>">Back</a>
+                <a class="btn btn-primary" href="/users/<%= user.id %>">Back</a>
                 <button type="submit" class="btn btn-primary">Submit</button>
               </div>
     

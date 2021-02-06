@@ -68,11 +68,11 @@
                         <tr>
                             <td scope="row" class="wr_num"><%= item.num %></td>
                             <td class="wr_title"><a href="/board/<%= item.num %><%= getPostQueryString() %>"><%= item.title %></a></td>
-                            <td class="wr_name"><%= item.name %></td>
-                            <td class="wr_wd"><%= item.wd %></td>
+                            <td class="wr_name"><%= item.username %></td>
+                            <td class="wr_wd" data-date="<%= item.writedate %>"></td>
                             <td class="wr_rc">
-                                <% if (item.readcount > 9) { %>
-                                    9+
+                                <% if (item.readcount > 99) { %>
+                                    99+
                                 <% }else{ %>
                                     <%= item.readcount %>
                                 <% } %>
@@ -119,7 +119,7 @@
                 <!-- 글쓰기 버튼 -->
                 <div class="col-2">
                     <% if(isAuthenticated){ %>
-                        <a href="/board/creating_post<% getPostQueryString() %>" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>
+                        <a href="/board/writing<% getPostQueryString() %>" class="btn btn-danger btn-sm float-right" role="button">글 작성</a>
                     <% }; %>
                 </div>
             </div>
