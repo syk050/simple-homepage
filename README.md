@@ -5,5 +5,5 @@
 참고: https://github.com/FaztTech/nodejs-mysql-links
 
 
-![](img/01.png)
+![](/img/02.png)
 ![](img/02.png)
